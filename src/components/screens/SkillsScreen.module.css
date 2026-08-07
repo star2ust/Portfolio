@@ -2,6 +2,11 @@
   position: relative;
   min-height: 100dvh;
   background: var(--surface-page);
+  /* horizontal only: the graph's ResizeObserver-driven sizing can be off by a few px on its
+     very first paint before settling (confirmed transient — the steady state has zero overflow,
+     unlike the persistent bug this same rule masked earlier in Phase 2). Vertical stays visible
+     so nothing gets clipped. */
+  overflow-x: hidden;
 }
 
 .layout {

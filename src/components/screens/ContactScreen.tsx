@@ -2,21 +2,30 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { Logo } from "@/components/core/Logo";
 import { PageTitle } from "@/components/typography/PageTitle";
 import { ContactRow } from "@/components/screens/ContactRow";
+import { Appear } from "@/motion/Appear";
+import { GrowRule } from "@/motion/GrowRule";
 import { SITE } from "@/lib/content";
 import styles from "./ContactScreen.module.css";
 
-/** Контакты — «Связь.» centred, rule below, then the contact rows. §9 in the motion spec grows
- *  the rule from its centre and reveals the rows left→right with fade; that lands in Phase 3. */
+/** Контакты — §9: «Связь.» rises bottom→top, its rule grows from the centre outward, then the
+ *  contact rows reveal left→right with fade, staggered. */
 export function ContactScreen() {
   return (
     <div className={styles.stage}>
       <SiteChrome active="КОНТАКТЫ" />
       <div className={styles.center}>
         <div className={styles.block}>
-          <PageTitle align="center">{SITE.contact.title}</PageTitle>
+          <Appear delay={0} from="up">
+            <PageTitle align="center" underline={false}>
+              {SITE.contact.title}
+            </PageTitle>
+          </Appear>
+          <GrowRule delay={160} style={{ marginTop: 30 }} />
           <div className={styles.rows}>
-            {SITE.contact.rows.map((r) => (
-              <ContactRow key={r.href} label={r.label} value={r.value} href={r.href} mark={r.mark} />
+            {SITE.contact.rows.map((r, i) => (
+              <Appear key={r.href} delay={420 + i * 100} from="left">
+                <ContactRow label={r.label} value={r.value} href={r.href} mark={r.mark} />
+              </Appear>
             ))}
           </div>
         </div>

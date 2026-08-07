@@ -5,18 +5,56 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { SkillGraph } from "@/components/graphics/SkillGraph";
 import { SkillHeading } from "@/components/typography/SkillHeading";
 import { LevelDots } from "@/components/graphics/LevelDots";
-import { SKILLS, SITE } from "@/lib/content";
+import { Appear } from "@/motion/Appear";
+import { SKILLS, SITE, type Skill } from "@/lib/content";
 import { pickSkillGraphBase, scaleSkillGraphConfig } from "./skillGraphConfig";
 import styles from "./SkillsScreen.module.css";
 
 const NODES = SKILLS.map((s) => ({ label: s.name, parent: s.parent }));
 
+type PanelState = "hidden" | "entering" | "shown" | "exiting";
+
 /** Навыки — a force-directed graph of the toolchain (SkillGraph) with a per-node info panel,
- *  beside the graph on wide screens, below it on tablet-portrait/mobile. §8 in the motion spec
- *  sequences heading→body→level-dots on select and slides the panel out on deselect; this
- *  screen shows the settled state (no animation), which lands in Phase 3. */
+ *  beside the graph on wide screens, below it on tablet-portrait/mobile.
+ *
+ *  §8: selecting a node from no-selection sequences heading→body→level-dots in; switching
+ *  straight to a different node swaps the text instantly, no animation; deselecting (clicking
+ *  empty space) slides the whole panel out to the right and fades it; selecting again replays
+ *  the entrance. */
 export function SkillsScreen() {
   const [active, setActive] = useState<string | null>(null);
+  const [displayed, setDisplayed] = useState<Skill | null>(null);
+  const [panelState, setPanelState] = useState<PanelState>("hidden");
+
+  // React's documented "adjust state during render" pattern: derive displayed/panelState the
+  // instant `active` changes, without a useEffect round-trip. See
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevActive, setPrevActive] = useState<string | null>(null);
+  if (active !== prevActive) {
+    setPrevActive(active);
+    if (active) {
+      setDisplayed(SKILLS.find((s) => s.name === active) ?? null);
+      setPanelState(prevActive ? "shown" : "entering"); // swap instantly vs. sequence in
+    } else {
+      setPanelState("exiting");
+    }
+  }
+
+  // Timed follow-ups: once "entering"/"exiting" has had time to play, settle into the end state.
+  useEffect(() => {
+    if (panelState === "entering") {
+      const t = setTimeout(() => setPanelState("shown"), 700);
+      return () => clearTimeout(t);
+    }
+    if (panelState === "exiting") {
+      const t = setTimeout(() => {
+        setPanelState("hidden");
+        setDisplayed(null);
+      }, 460);
+      return () => clearTimeout(t);
+    }
+  }, [panelState]);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [config, setConfig] = useState<ReturnType<typeof scaleSkillGraphConfig> | null>(null);
 
@@ -40,8 +78,9 @@ export function SkillsScreen() {
     };
   }, []);
 
-  const selected = SKILLS.find((s) => s.name === active) ?? null;
   const panelSide = config?.panel ?? "side";
+  const exiting = panelState === "exiting";
+  const entering = panelState === "entering";
 
   return (
     <div className={styles.stage}>
@@ -66,13 +105,35 @@ export function SkillsScreen() {
           ) : null}
         </div>
 
-        <div className={styles.panel} style={{ pointerEvents: selected ? "auto" : "none" }}>
-          {selected ? (
-            <>
-              <SkillHeading>{selected.name}</SkillHeading>
-              <p className={styles.body}>{selected.body}</p>
-              <LevelDots level={selected.level} />
-            </>
+        <div
+          className={styles.panel}
+          style={{
+            pointerEvents: displayed ? "auto" : "none",
+            opacity: exiting ? 0 : 1,
+            transform: exiting ? "translateX(40px)" : "none",
+            transition: exiting ? "opacity 460ms var(--ease), transform 460ms var(--ease)" : "none",
+          }}
+        >
+          {displayed ? (
+            entering ? (
+              <>
+                <Appear delay={0}>
+                  <SkillHeading>{displayed.name}</SkillHeading>
+                </Appear>
+                <Appear delay={160}>
+                  <p className={styles.body}>{displayed.body}</p>
+                </Appear>
+                <Appear delay={320}>
+                  <LevelDots level={displayed.level} />
+                </Appear>
+              </>
+            ) : (
+              <>
+                <SkillHeading>{displayed.name}</SkillHeading>
+                <p className={styles.body}>{displayed.body}</p>
+                <LevelDots level={displayed.level} />
+              </>
+            )
           ) : (
             <p className={styles.empty}>{SITE.skills.emptyState}</p>
           )}
