@@ -9,6 +9,9 @@ export interface SiteChromeProps {
   icon?: "back" | "close";
   backHref?: string;
   tone?: "default" | "invert";
+  /** the detail screen hides the site nav entirely (source: `Chrome menu={false}`) — closing
+   *  is the only way out of that screen, there's no "jump straight to another section" menu. */
+  menu?: boolean;
 }
 
 /**
@@ -22,13 +25,13 @@ export interface SiteChromeProps {
  * About body text on mobile). Screens render it themselves via <FooterLogo /> at the end of
  * their own content flow instead.
  */
-export function SiteChrome({ active, icon = "back", backHref = "/", tone = "default" }: SiteChromeProps) {
+export function SiteChrome({ active, icon = "back", backHref = "/", tone = "default", menu = true }: SiteChromeProps) {
   return (
     <>
       <Link href={backHref} aria-label={icon === "close" ? "закрыть" : "назад"} className={styles.back}>
         <IconButton icon={icon} as="span" style={{ width: "100%", height: "100%" }} />
       </Link>
-      <PrimaryNav active={active} tone={tone} />
+      {menu ? <PrimaryNav active={active} tone={tone} /> : null}
     </>
   );
 }

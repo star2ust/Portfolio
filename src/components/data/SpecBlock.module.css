@@ -2,7 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 100%;
+  /* No explicit width: this is a flex item inside .specs (HeroScreen.module.css). A width:100%
+     here resolves as this item's flex-basis, which makes each block claim the *whole* row's
+     width and forces the other two onto their own line — the three spec columns render stacked
+     vertically instead of side by side. flex-grow (set per breakpoint on .specs > *) is what
+     should fill the row; max-width caps how far any one block is allowed to grow. */
   max-width: 290px;
 }
 .rule {

@@ -119,8 +119,17 @@
   .portraitWrap {
     order: 2;
     width: 250px;
-    aspect-ratio: auto;
+    aspect-ratio: 250 / 768;
     flex: 0 0 auto;
+    /* Anchored to the right edge with its own margin (not "whatever's left after copy"): a
+       flex-grow copy column left dead space here equal to (container width − copy's own
+       max-width), which on wide viewports is much bigger than the source's actual ~10%-of-
+       viewport right margin — margin-left: auto absorbs that leftover instead, so the portrait
+       always sits a fixed, deliberate distance off the edge (source: 134px@1024, 140px@1440,
+       195px@1920 — a flat 110px "extra" beyond the page gutter holds from 1024 to 1440, then
+       fluid to 155px "extra" by 1920, see the 1440+ rule below). */
+    margin-left: auto;
+    margin-right: 110px;
   }
   .copy {
     order: 1;
@@ -134,14 +143,18 @@
 }
 
 @media (min-width: 1114px) {
-  .portraitWrap { width: 290px; }
+  .portraitWrap { width: 290px; aspect-ratio: 290 / 900; }
   .title { font-size: 36px; }
   .lede { font-size: 20px; }
   .body { font-size: 15px; }
 }
 
+@media (min-width: 1440px) {
+  .portraitWrap { margin-right: clamp(110px, calc(-25px + 9.375vw), 155px); }
+}
+
 @media (min-width: 1920px) {
-  .portraitWrap { width: 445px; }
+  .portraitWrap { width: 445px; aspect-ratio: 445 / 1080; margin-right: 155px; }
   .title { font-size: 43px; }
   .lede { font-size: 24px; }
   .body { font-size: 16px; }

@@ -54,8 +54,8 @@ export function AboutScreen({ settings }: AboutScreenProps) {
               <div className={styles.metaGroup}>
                 <div className={styles.metaRule} />
                 <div className={styles.metaFields}>
-                  <MetaField label={imya.label} value={imya.value} />
-                  <MetaField label={yo.label} value={yo.value} align="right" />
+                  <MetaField label={imya.label} value={imya.value} style={{ flex: 6 }} />
+                  <MetaField label={yo.label} value={yo.value} align="right" style={{ flex: 1 }} />
                 </div>
               </div>
               <div className={styles.metaGroup}>

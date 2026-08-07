@@ -1,0 +1,39 @@
+.cover {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--page-gutter);
+  background: var(--surface-page);
+  pointer-events: none;
+}
+
+.lede {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.wordMask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.word {
+  display: inline-block;
+  will-change: opacity, transform;
+}
+
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .lede { font-size: 20px !important; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .lede { font-size: 21px !important; }
+}
+@media (min-width: 1114px) {
+  .lede { font-size: 26px !important; }
+}
+@media (min-width: 1920px) {
+  .lede { font-size: var(--fs-lede) !important; }
+}

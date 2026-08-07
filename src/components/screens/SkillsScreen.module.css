@@ -9,9 +9,12 @@
   overflow-x: hidden;
 }
 
-.layout {
-  padding-top: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px);
-}
+/* No padding-top here on purpose: SiteChrome's back button/nav are position:fixed (they don't
+   consume flow space), so — unlike About/Detail, which really do need room below the chrome —
+   pushing .layout down just adds dead space the graph's own height doesn't know to shrink by,
+   forcing a scrollbar equal to exactly that padding. The graph fills the true viewport instead,
+   with the fixed chrome floating over its top corners, matching the source (one absolute
+   stacking context, chrome layered on top of a full-bleed graph). */
 
 .graphWrap {
   width: 100%;

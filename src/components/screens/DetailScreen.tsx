@@ -16,71 +16,80 @@ export interface DetailScreenProps {
   next: Project;
 }
 
-/** Project detail — text column (index, title, role, body, Задачи/Результат) beside the media
- *  column (desktop/laptop/tablet-landscape) or above it (tablet-portrait/mobile), a pager below.
+/** Project detail — text column left, media column right (tablet-landscape and up) or media
+ *  above text (tablet-portrait/mobile), a pager pinned at the bottom. §7: text blocks slide in
+ *  left→right with opacity, rules grow from centre. The transition into/out of this page is a
+ *  fade rather than the arc (see RouteTransition). The site nav is hidden here entirely (source:
+ *  `Chrome menu={false}`) — the close (×) button is the only way out.
  *
- *  §7: text blocks slide in left→right with opacity, rules grow from centre. The transition
- *  into/out of this page is a fade rather than the arc (see RouteTransition). Not implemented:
- *  the FLIP hand-off that flies the clicked grid card's image into the slot here — it needs the
- *  card's click-time bounding rect carried across a real navigation (sessionStorage or a
- *  shared layout), which is a meaningfully bigger piece deferred past this pass; the image
- *  cross-fades in with the rest of the media column instead. The footer mark is intentionally
- *  omitted here, same as the source — it would sit over the "Предыдущий" link.
+ *  The whole screen holds to one viewport, no page scroll, on every breakpoint — matching the
+ *  source's fixed 1080-tall canvas — by fixing .stage's height and letting only .textCol scroll
+ *  internally if a project's description/tasks/result run long (.textCol's own overflow-y,
+ *  not the page's). The media column sits beside the text (image + a narrow video/slider rail),
+ *  not stacked under it.
  *
- *  The video/slider row: the source bundle itself ships these as "labelled placeholders" —
+ *  Not implemented: the FLIP hand-off that flies the clicked grid card's image into the slot
+ *  here — it needs the card's click-time bounding rect carried across a real navigation
+ *  (sessionStorage or a shared layout), which is a meaningfully bigger piece deferred past this
+ *  pass; the image cross-fades in with the rest of the media column instead. The footer mark is
+ *  intentionally omitted here, same as the source — it would sit over the "Предыдущий" link.
+ *
+ *  The video/slider rail: the source bundle itself ships these as "labelled placeholders" —
  *  project/ui_kits/portfolio/README.md calls them "deliberately unfinished, as in the source."
  *  Once a project has real `gallery`/`vimeoUrl` values in Sanity, this renders an actual photo
- *  slider and a Vimeo embed in that row instead; a project with neither still falls back to the
+ *  slider and a Vimeo embed in that rail instead; a project with neither still falls back to the
  *  flat placeholder chips, so an empty CMS entry never renders a broken player. */
 export function DetailScreen({ project, prev, next }: DetailScreenProps) {
   return (
     <main className={styles.stage}>
-      <SiteChrome icon="close" backHref="/work" />
+      <SiteChrome icon="close" backHref="/work" menu={false} />
       <div className={styles.layout}>
-        <Appear delay={0} from="up" className={styles.mediaCol}>
-          <div className={styles.imageWrap}>
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              sizes="(max-width: 1113px) 100vw, 50vw"
-              className={styles.image}
-            />
-          </div>
-          <div className={styles.placeholderRow}>
-            {project.vimeoUrl ? (
-              <VideoEmbed vimeoUrl={project.vimeoUrl} title={`${project.title} — видео`} className={styles.mediaSlot} />
-            ) : (
-              <MediaPlaceholder kind="video" label="Видео" className={styles.mediaSlot} />
-            )}
-            {project.gallery && project.gallery.length > 0 ? (
-              <MediaGallery images={project.gallery} alt={project.title} className={styles.mediaSlot} />
-            ) : (
-              <MediaPlaceholder kind="image" label="Слайдер" className={styles.mediaSlot} />
-            )}
-          </div>
-        </Appear>
+        <div className={styles.contentRow}>
+          <Appear delay={0} from="up" className={styles.mediaCol}>
+            <div className={styles.imageWrap}>
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                sizes="(max-width: 1113px) 100vw, 50vw"
+                className={styles.image}
+              />
+            </div>
+            <div className={styles.mediaRail}>
+              {project.vimeoUrl ? (
+                <VideoEmbed vimeoUrl={project.vimeoUrl} title={`${project.title} — видео`} className={styles.videoSlot} />
+              ) : (
+                <MediaPlaceholder kind="video" label="Видео" className={styles.videoSlot} />
+              )}
+              {project.gallery && project.gallery.length > 0 ? (
+                <MediaGallery images={project.gallery} alt={project.title} className={styles.sliderSlot} />
+              ) : (
+                <MediaPlaceholder kind="image" label="Слайдер" className={styles.sliderSlot} />
+              )}
+            </div>
+          </Appear>
 
-        <div className={styles.textCol}>
-          <Appear delay={60}>
-            <span className={styles.index}>{project.index}</span>
-          </Appear>
-          <Appear delay={120}>
-            <h1 className={styles.title}>{project.title}</h1>
-          </Appear>
-          <div className={styles.roleRow}>
-            <Appear delay={220}>
-              <span className={styles.role}>{project.role}</span>
+          <div className={styles.textCol}>
+            <Appear delay={60}>
+              <span className={styles.index}>{project.index}</span>
             </Appear>
-            <GrowRule delay={280} />
+            <Appear delay={120}>
+              <h1 className={styles.title}>{project.title}</h1>
+            </Appear>
+            <div className={styles.roleRow}>
+              <Appear delay={220}>
+                <span className={styles.role}>{project.role}</span>
+              </Appear>
+              <GrowRule delay={280} />
+            </div>
+            <Appear delay={340}>
+              <p className={styles.body}>{project.body}</p>
+            </Appear>
+            <Appear delay={440} className={styles.metaRow}>
+              <ProjectMeta label="Задачи:" body={project.tasks.join("\n")} />
+              <ProjectMeta label="Результат:" body={project.result} />
+            </Appear>
           </div>
-          <Appear delay={340}>
-            <p className={styles.body}>{project.body}</p>
-          </Appear>
-          <Appear delay={440} className={styles.metaRow}>
-            <ProjectMeta label="Задачи:" body={project.tasks.join("\n")} />
-            <ProjectMeta label="Результат:" body={project.result} />
-          </Appear>
         </div>
 
         <div className={styles.pager}>

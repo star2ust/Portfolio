@@ -1,56 +1,68 @@
 .stage {
   position: relative;
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
   background: var(--surface-page);
 }
 
 .layout {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
-  padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) var(--page-gutter) 60px;
-  gap: 28px;
+  height: 100%;
+  padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 16px) var(--page-gutter) 20px;
+  gap: 12px;
+}
+
+/* Holds the media + text columns; .pager sits below it, outside the scroll/shrink area, so it
+   never gets pushed off-screen. */
+.contentRow {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0; /* let children's own overflow rules apply instead of growing past .layout */
+  gap: 16px;
 }
 
 .mediaCol {
   order: 1;
+  flex: 0 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  gap: 8px;
 }
 .imageWrap {
   position: relative;
-  width: 100%;
+  flex: 1 1 auto;
   aspect-ratio: 16 / 9;
 }
 .image {
   object-fit: cover;
 }
-.placeholderRow {
+.mediaRail {
+  flex: 0 0 auto;
+  width: 64px;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
 }
-.placeholderRow > * {
-  flex: 1;
-  height: 60px;
+.videoSlot {
+  flex: 0 0 34%;
 }
-/* A real slider/video needs more than a 60px chip to be usable — the source's flat placeholder
-   row only ever had to hold a label. Scales with the same breakpoints as the row below. */
-.mediaSlot {
-  height: clamp(120px, 22vw, 220px);
-}
-
-@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
-  .mediaSlot { height: clamp(140px, 14vw, 240px); }
+.sliderSlot {
+  flex: 1 1 auto;
 }
 
 .textCol {
   order: 2;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   max-width: 720px;
   margin: 0 auto;
   width: 100%;
+  padding-right: 4px;
 }
 
 .index {
@@ -72,7 +84,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 26px;
+  margin-top: 14px;
 }
 .role {
   font-family: var(--font-core);
@@ -81,11 +93,11 @@
   color: var(--text-body);
 }
 .body {
-  margin: 16px 0 0;
+  margin: 12px 0 0;
   font-family: var(--font-core);
   font-weight: var(--fw-light);
   font-size: 11px;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--text-body);
   white-space: pre-line;
   text-wrap: pretty;
@@ -93,18 +105,18 @@
 .metaRow {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-top: 28px;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .pager {
-  order: 3;
+  flex: 0 0 auto;
   display: flex;
   justify-content: space-between;
-  padding-top: 16px;
+  padding-top: 12px;
 }
 
-/* ---------- tablet portrait: single column, roomier than mobile ---------- */
+/* ---------- tablet portrait: media row above a scrollable text column, same shape as mobile ---------- */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
   .index { font-size: 13px; }
   .title { font-size: 30px; line-height: 1.15; }
@@ -112,15 +124,15 @@
   .body { font-size: 14px; line-height: 1.5; }
   .metaRow { flex-direction: row; gap: 16px; }
   .textCol { max-width: 720px; }
+  .mediaRail { width: 90px; }
 }
 
 /* ---------- tablet landscape / laptop / desktop: media beside text ---------- */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
-  .layout {
+  .contentRow {
     flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 32px 40px;
+    align-items: stretch;
+    gap: 32px;
   }
   .textCol {
     order: 1;
@@ -131,11 +143,10 @@
   .mediaCol {
     order: 2;
     flex: 1 1 420px;
+    height: 100%;
   }
-  .pager {
-    order: 3;
-    flex-basis: 100%;
-  }
+  .imageWrap { aspect-ratio: auto; }
+  .mediaRail { width: 100px; }
   .metaRow { flex-direction: row; gap: 16px; }
 }
 
@@ -152,6 +163,7 @@
   .role { font-size: 16px; }
   .body { font-size: 15px; line-height: 1.45; }
   .textCol { max-width: 550px; }
+  .mediaRail { width: 115px; }
 }
 
 @media (min-width: 1920px) {
@@ -160,4 +172,5 @@
   .role { font-size: var(--fs-body-lg); }
   .body { font-size: var(--fs-body-lg); line-height: 1.35; }
   .textCol { max-width: 618px; }
+  .mediaRail { width: var(--rail-w); }
 }
