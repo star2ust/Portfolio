@@ -3,6 +3,12 @@
   height: 100dvh;
   overflow: hidden;
   background: var(--surface-page);
+  /* The close (×) button sat too close to the index/title text below it. --chrome-back-top-
+     adjust is SiteChrome's dedicated escape hatch for exactly this (see SiteChrome.module.css)
+     — it nudges only the back/close icon, not --chrome-back-top itself, which .layout's own
+     padding-top below also reads; touching that directly would carry the text down (or up)
+     right along with the icon and leave the two exactly as close together as before. */
+  --chrome-back-top-adjust: -10px;
 }
 
 .layout {

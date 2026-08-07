@@ -29,26 +29,54 @@ export function pickSkillGraphBase(viewportWidth: number, orientation: "portrait
   return SKILL_GRAPH_CONFIGS.desktop;
 }
 
-/** Scales a base config to the container's actual measured width, so the graph is genuinely
+/** Scales a base config to the container's actual measured size, so the graph is genuinely
  *  fluid within a band (exact at the anchor width, interpolated elsewhere) instead of snapping.
  *
  *  For "below"-panel configs (mobile, tablet-portrait) the graph is meant to sit centred, and
  *  their base centerX is exactly width/2 — but a node label ("TouchDesigner") extends well past
  *  its dot, so scaling the raw node *positions* to fill the full container clips labels at the
  *  edge (confirmed by a real 26px page overflow at 360px). A fixed margin keeps the node spread
- *  itself inset from both edges, leaving room for label overhang; "side"-panel configs already
- *  have enough clearance from their own asymmetric offset and don't need it. */
-export function scaleSkillGraphConfig(base: SkillGraphBaseConfig, measuredWidth: number): SkillGraphBaseConfig {
-  const margin = base.panel === "below" ? 36 : 0;
-  const usableWidth = Math.max(measuredWidth - margin * 2, 1);
-  const scale = usableWidth / base.width;
-  const centerX = base.panel === "below" ? measuredWidth / 2 : base.centerX * scale;
+ *  itself inset from both edges, leaving room for label overhang.
+ *
+ *  For "side"-panel configs (the ones that share a viewport-height container with no page
+ *  scroll — see SkillsScreen.module.css), scaling to width alone assumes the container's real
+ *  aspect ratio matches the base config's ~16:9 exactly. A real browser viewport essentially
+ *  never does (toolbar/tab-strip chrome eats into the height a "1920×1080" window actually has
+ *  to give), so a width-only scale could still render a graph taller than the space actually
+ *  available and force a scrollbar. Fits both axes at once instead — like object-fit: contain —
+ *  and centers the result in whatever leftover space is left on the shorter axis. */
+export function scaleSkillGraphConfig(
+  base: SkillGraphBaseConfig,
+  measuredWidth: number,
+  measuredHeight?: number
+): SkillGraphBaseConfig {
+  if (base.panel === "below" || !measuredHeight) {
+    const margin = base.panel === "below" ? 36 : 0;
+    const usableWidth = Math.max(measuredWidth - margin * 2, 1);
+    const scale = usableWidth / base.width;
+    const centerX = base.panel === "below" ? measuredWidth / 2 : base.centerX * scale;
+    return {
+      ...base,
+      width: measuredWidth,
+      height: base.height * scale,
+      centerX,
+      centerY: base.centerY * scale,
+      radius: base.radius * scale,
+      dot: base.dot * scale,
+      hub: base.hub * scale,
+      fontSize: base.fontSize * scale,
+    };
+  }
+
+  const scale = Math.min(measuredWidth / base.width, measuredHeight / base.height);
+  const offsetX = (measuredWidth - base.width * scale) / 2;
+  const offsetY = (measuredHeight - base.height * scale) / 2;
   return {
     ...base,
     width: measuredWidth,
-    height: base.height * scale,
-    centerX,
-    centerY: base.centerY * scale,
+    height: measuredHeight,
+    centerX: base.centerX * scale + offsetX,
+    centerY: base.centerY * scale + offsetY,
     radius: base.radius * scale,
     dot: base.dot * scale,
     hub: base.hub * scale,

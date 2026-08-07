@@ -11,16 +11,31 @@ const micraBase64 = readFileSync(path.join(root, "public", "fonts", "Micra.ttf")
 const montserratBase64 = readFileSync(path.join(root, "public", "fonts", "Montserrat-Regular.ttf")).toString("base64");
 
 let browser;
-async function shot(width, height, html, outPath) {
+async function shot(width, height, html, outPath, { omitBackground = false } = {}) {
   browser ??= await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
   const page = await browser.newPage({ viewport: { width, height } });
   await page.setContent(html);
   await page.waitForTimeout(150); // let @font-face settle
-  await page.screenshot({ path: outPath });
+  await page.screenshot({ path: outPath, omitBackground });
   await page.close();
 }
 
-function iconHtml(size, pad = 0.22) {
+// The browser-tab favicon: white mark, transparent tile, as large as the canvas allows — pad
+// is just breathing room so the rotated mark's corners don't clip, not a background inset.
+function transparentIconHtml(size, pad = 0.2) {
+  return `<!doctype html><html><head><style>
+    html,body{margin:0;padding:0;background:transparent}
+    .tile{width:${size}px;height:${size}px;background:transparent;display:flex;align-items:center;justify-content:center}
+    .mark{width:${Math.round(size * (1 - pad * 2))}px;aspect-ratio:195.57/329.89;background:#fff;
+      transform:rotate(12deg);
+      -webkit-mask:url(${svgDataUri}) center/contain no-repeat;mask:url(${svgDataUri}) center/contain no-repeat}
+  </style></head><body><div class="tile"><div class="mark"></div></div></body></html>`;
+}
+
+// The iOS "add to home screen" icon: kept on its dark tile, not transparent — iOS fills any
+// alpha in this specific icon with solid black itself, so an actually-transparent PNG here
+// would just look like an unstyled accident instead of a deliberate mark-on-a-plate.
+function appleIconHtml(size, pad = 0.22) {
   return `<!doctype html><html><head><style>
     html,body{margin:0;padding:0}
     .tile{width:${size}px;height:${size}px;background:#1F2125;display:flex;align-items:center;justify-content:center}
@@ -51,8 +66,8 @@ function ogHtml() {
   </body></html>`;
 }
 
-await shot(512, 512, iconHtml(512), path.join(root, "src", "app", "icon.png"));
-await shot(180, 180, iconHtml(180, 0.18), path.join(root, "src", "app", "apple-icon.png"));
+await shot(512, 512, transparentIconHtml(512), path.join(root, "src", "app", "icon.png"), { omitBackground: true });
+await shot(180, 180, appleIconHtml(180, 0.18), path.join(root, "src", "app", "apple-icon.png"));
 await shot(1200, 630, ogHtml(), path.join(root, "src", "app", "opengraph-image.png"));
 
 if (browser) await browser.close();

@@ -109,52 +109,57 @@
   .portraitWrap { aspect-ratio: 672 / 300; }
 }
 
-/* ---------- tablet landscape / laptop / desktop: portrait as a side column ---------- */
+/* ---------- tablet landscape / laptop / desktop: a real 12-column grid (40px margins, 20px
+   gutter, per the client's own Figma grid) — two 3-column body-text blocks, an empty 1-column
+   gap, then a 5-column photo. .stage is height-capped here (no page scroll, matching the
+   source's fixed-canvas feel); .copy scrolls internally on the rare case its own content
+   doesn't fit, same fallback pattern as the detail page's text column. ---------- */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
+  .stage {
+    height: 100dvh;
+    overflow: hidden;
+  }
   .layout {
-    flex-direction: row;
-    align-items: stretch;
-    gap: 40px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 20px;
+    row-gap: 0;
+    align-content: stretch;
+    height: 100%;
+    padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) var(--page-gutter) 40px;
   }
   .portraitWrap {
+    grid-column: 8 / 13;
     order: 2;
-    width: 250px;
-    aspect-ratio: 250 / 768;
-    flex: 0 0 auto;
-    /* Anchored to the right edge with its own margin (not "whatever's left after copy"): a
-       flex-grow copy column left dead space here equal to (container width − copy's own
-       max-width), which on wide viewports is much bigger than the source's actual ~10%-of-
-       viewport right margin — margin-left: auto absorbs that leftover instead, so the portrait
-       always sits a fixed, deliberate distance off the edge (source: 134px@1024, 140px@1440,
-       195px@1920 — a flat 110px "extra" beyond the page gutter holds from 1024 to 1440, then
-       fluid to 155px "extra" by 1920, see the 1440+ rule below). */
-    margin-left: auto;
-    margin-right: 110px;
+    width: auto;
+    aspect-ratio: auto;
+    margin: 0;
   }
   .copy {
+    grid-column: 1 / 7;
     order: 1;
     margin: 0;
-    flex: 1;
+    max-width: none;
     justify-content: center;
-    max-width: 960px;
+    overflow-y: auto;
+    min-height: 0;
   }
-  .bodyCols { flex-direction: row; }
+  .bodyCols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    flex-direction: unset;
+  }
   .metaRow { flex-direction: row; }
 }
 
 @media (min-width: 1114px) {
-  .portraitWrap { width: 290px; aspect-ratio: 290 / 900; }
   .title { font-size: 36px; }
   .lede { font-size: 20px; }
   .body { font-size: 15px; }
 }
 
-@media (min-width: 1440px) {
-  .portraitWrap { margin-right: clamp(110px, calc(-25px + 9.375vw), 155px); }
-}
-
 @media (min-width: 1920px) {
-  .portraitWrap { width: 445px; aspect-ratio: 445 / 1080; margin-right: 155px; }
   .title { font-size: 43px; }
   .lede { font-size: 24px; }
   .body { font-size: 16px; }

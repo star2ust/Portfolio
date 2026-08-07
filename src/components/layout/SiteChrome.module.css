@@ -1,7 +1,11 @@
 .back {
   position: fixed;
   left: var(--page-gutter);
-  top: var(--chrome-back-top);
+  /* --chrome-back-top-adjust: an escape hatch for a single page to nudge just this icon
+     (defaults to 0, i.e. no-op everywhere else) without touching --chrome-back-top itself,
+     which .layout padding-top rules elsewhere also read — overriding that directly would carry
+     a page's whole content area along with the icon instead of changing the gap between them. */
+  top: calc(var(--chrome-back-top) + var(--chrome-back-top-adjust, 0px));
   width: var(--chrome-icon-size);
   height: var(--chrome-icon-size);
   z-index: 30;

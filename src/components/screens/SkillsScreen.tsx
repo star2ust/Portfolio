@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SiteChrome } from "@/components/layout/SiteChrome";
+import { FooterLogo } from "@/components/layout/FooterLogo";
 import { SkillGraph } from "@/components/graphics/SkillGraph";
 import { SkillHeading } from "@/components/typography/SkillHeading";
 import { LevelDots } from "@/components/graphics/LevelDots";
@@ -67,10 +68,11 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
     if (!el) return;
     const recompute = () => {
       const width = el.clientWidth;
-      if (width <= 0) return;
+      const height = el.clientHeight;
+      if (width <= 0 || height <= 0) return;
       const orientation = window.matchMedia("(orientation: landscape)").matches ? "landscape" : "portrait";
       const base = pickSkillGraphBase(window.innerWidth, orientation);
-      setConfig(scaleSkillGraphConfig(base, width));
+      setConfig(scaleSkillGraphConfig(base, width, height));
     };
     recompute();
     const ro = new ResizeObserver(recompute);
@@ -122,7 +124,7 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
             entering ? (
               <>
                 <Appear delay={0}>
-                  <SkillHeading>{displayed.name}</SkillHeading>
+                  <SkillHeading mark={false}>{displayed.name}</SkillHeading>
                 </Appear>
                 <Appear delay={160}>
                   <p className={styles.body}>{displayed.body}</p>
@@ -133,7 +135,7 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
               </>
             ) : (
               <>
-                <SkillHeading>{displayed.name}</SkillHeading>
+                <SkillHeading mark={false}>{displayed.name}</SkillHeading>
                 <p className={styles.body}>{displayed.body}</p>
                 <LevelDots level={displayed.level} style={{ paddingTop: 40 }} />
               </>
@@ -142,6 +144,8 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
             <p className={styles.empty}>{emptyState}</p>
           )}
         </div>
+
+        <FooterLogo className={styles.footerLogo} />
       </div>
     </main>
   );

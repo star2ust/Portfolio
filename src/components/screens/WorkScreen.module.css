@@ -8,6 +8,20 @@
   padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) var(--page-gutter) 60px;
 }
 
+/* >=768px: the top-right chrome is the full 5-item NavMenu here (mobile's compact burger
+   button doesn't need this) — its own stack is taller than the back button /
+   chrome-back-top+chrome-icon-size math above accounts for, so the grid's first row was
+   climbing up underneath its text. Clears the nav's real height at each tier instead. */
+@media (min-width: 768px) {
+  .layout { padding-top: calc(var(--chrome-nav-top) + 155px); }
+}
+@media (min-width: 1114px) {
+  .layout { padding-top: calc(var(--chrome-nav-top) + 175px); }
+}
+@media (min-width: 1920px) {
+  .layout { padding-top: calc(var(--chrome-nav-top) + 195px); }
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

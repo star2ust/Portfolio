@@ -35,7 +35,7 @@
   /* The source flows the mobile logo in-document instead of fixing it; SiteChrome fixes it at
      every breakpoint for simplicity (see its own doc comment), so this still needs a real value. */
   --chrome-logo-bottom: 20px;
-  --chrome-logo-size: 26px;
+  --chrome-logo-size: 34px; /* 26px +30% */
 }
 
 @media (min-width: 768px) and (max-width: 1113px) {
@@ -48,14 +48,14 @@
     --chrome-nav-top: 34px;
     --chrome-icon-size: 34px;
     --chrome-logo-bottom: 38px;
-    --chrome-logo-size: 40px;
+    --chrome-logo-size: 52px; /* 40px +30% */
   }
 }
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
   :root{
     --fs-nav: 11px; --fs-caption: 12px;
     --chrome-back-top: 48px; --chrome-nav-top: 30px;
-    --chrome-icon-size: 32px; --chrome-logo-bottom: 32px; --chrome-logo-size: 36px;
+    --chrome-icon-size: 32px; --chrome-logo-bottom: 32px; --chrome-logo-size: 47px; /* 36px +30% */
   }
 }
 
@@ -66,7 +66,7 @@
     --fs-caption: 16px;
     --fs-meta: 11px;
     --chrome-back-top: 56px; --chrome-nav-top: 36px;
-    --chrome-icon-size: 38px; --chrome-logo-bottom: 36px; --chrome-logo-size: 44px;
+    --chrome-icon-size: 38px; --chrome-logo-bottom: 36px; --chrome-logo-size: 57px; /* 44px +30% */
   }
 }
 @media (min-width: 1440px) {
@@ -76,7 +76,7 @@
     --fs-caption: clamp(16px, calc(10.000px + 0.4167vw), 18px); /* 1440→16, 1920→18 */
     --fs-meta: clamp(11px, calc(5.667px + 0.4167vw), 13px);     /* 1440→11, 1920→13 */
     --chrome-back-top: 80px; --chrome-nav-top: 48px;
-    --chrome-icon-size: 48px; --chrome-logo-bottom: 44px; --chrome-logo-size: 40px;
+    --chrome-icon-size: 48px; --chrome-logo-bottom: 44px; --chrome-logo-size: 52px; /* 40px +30% */
   }
 }
 @media (min-width: 1920px) {

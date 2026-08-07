@@ -5,7 +5,8 @@
   /* horizontal only: the graph's ResizeObserver-driven sizing can be off by a few px on its
      very first paint before settling (confirmed transient — the steady state has zero overflow,
      unlike the persistent bug this same rule masked earlier in Phase 2). Vertical stays visible
-     so nothing gets clipped. */
+     on .stacked (mobile/tablet-portrait), which is allowed to scroll normally; .sideBySide caps
+     its own height below instead, since that tier must never scroll at all. */
   overflow-x: hidden;
 }
 
@@ -43,7 +44,15 @@
   text-align: center;
 }
 
-/* ---------- stacked (mobile, tablet-portrait): panel below the graph, in flow ---------- */
+.footerLogo {
+  position: absolute;
+  left: var(--page-gutter);
+  bottom: 24px;
+}
+
+/* ---------- stacked (mobile, tablet-portrait): panel below the graph, in flow — this tier is
+   allowed to scroll normally (a real page with a graph above and however much skill copy below
+   doesn't fit a "no scroll, ever" rule the way the side-by-side tier's fixed overlay does). ---------- */
 .stacked .panel {
   position: static;
   width: 100%;
@@ -52,14 +61,21 @@
 
 /* ---------- side (tablet-landscape, laptop, desktop): panel overlays the graph's left
    edge — the graph's own centerX is already shifted right to leave visual room for it,
-   same as the source (they share one absolute-positioned stacking context, not two columns) ---------- */
+   same as the source (they share one absolute-positioned stacking context, not two columns).
+   Height-capped to exactly the viewport (not min-height) so this tier can never scroll — the
+   graph fits itself within that fixed box on both axes (skillGraphConfig.ts), not just width. ---------- */
 .sideBySide {
   position: relative;
+  height: 100dvh;
+  overflow: hidden;
+}
+.sideBySide .graphWrap {
+  height: 100%;
 }
 .sideBySide .panel {
   position: absolute;
   left: var(--page-gutter);
-  top: 50%;
+  top: 42%;
   transform: translateY(-50%);
   width: 320px;
 }
