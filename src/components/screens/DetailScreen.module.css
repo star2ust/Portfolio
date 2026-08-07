@@ -35,8 +35,11 @@
   flex: 1 1 auto;
   aspect-ratio: 16 / 9;
 }
+/* Applied to FlipImage's own wrapper div (the element the FLIP transform animates), not the
+   <img> itself — it needs to fill .imageWrap for the Image's `fill` prop to size correctly. */
 .image {
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 .mediaRail {
   flex: 0 0 auto;
