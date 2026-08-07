@@ -87,7 +87,7 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
   const entering = panelState === "entering";
 
   return (
-    <div className={styles.stage}>
+    <main className={styles.stage}>
       <SiteChrome active="НАВЫКИ" />
       <div className={`${styles.layout} ${panelSide === "below" ? styles.stacked : styles.sideBySide}`}>
         <div ref={containerRef} className={styles.graphWrap}>
@@ -143,6 +143,6 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
           )}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

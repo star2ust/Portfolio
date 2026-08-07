@@ -5,6 +5,11 @@
   justify-content: center;
   color: var(--text-body);
   transition: color var(--dur) var(--ease);
+  /* The visible text is only ~13-18px tall on small breakpoints — under WCAG 2.5.8's 24x24
+     minimum target size (confirmed by Lighthouse). Real padding (not cancelled by a negative
+     margin) both grows the tappable box and adds a bit of breathing room between rows — see
+     ContactScreen.module.css's mobile .rows gap, trimmed to compensate so they don't stack up. */
+  padding: 7px 10px;
 }
 .row:hover {
   color: var(--accent);

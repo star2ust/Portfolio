@@ -31,7 +31,7 @@
   padding-top: 30px;
 }
 @media (max-width: 767px) {
-  .rows { gap: 6px; padding-top: 14px; }
+  .rows { gap: 2px; padding-top: 14px; }
   .block { max-width: 320px; }
 }
 @media (min-width: 768px) and (max-width: 1113px) {

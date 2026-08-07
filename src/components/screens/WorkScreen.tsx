@@ -20,7 +20,7 @@ export interface WorkScreenProps {
  *  build/exit choreography is a meaningfully bigger, lower-value piece left for later. */
 export function WorkScreen({ projects, lede }: WorkScreenProps) {
   return (
-    <div className={styles.stage}>
+    <main className={styles.stage}>
       <SiteChrome active="ПРОЕКТЫ" />
       <div className={styles.layout}>
         <Appear delay={0} from="up" className={styles.ledeWrap}>
@@ -42,6 +42,6 @@ export function WorkScreen({ projects, lede }: WorkScreenProps) {
         </div>
         <FooterLogo />
       </div>
-    </div>
+    </main>
   );
 }

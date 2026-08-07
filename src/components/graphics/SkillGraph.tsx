@@ -254,8 +254,17 @@ export function SkillGraph({
   const b = bodies.current;
   const lit = (label: string) => held === label || active === label;
 
+  const keyActivate = (e: React.KeyboardEvent, label: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault(); // stop Space from scrolling the page
+      onSelect?.(label);
+    }
+  };
+
   return (
     <div
+      role="group"
+      aria-label="Граф навыков — выберите узел, чтобы увидеть описание"
       onPointerMove={move}
       onPointerUp={up}
       className={styles.wrap}
@@ -284,9 +293,14 @@ export function SkillGraph({
       {list.map((n, i) => (
         <div
           key={n.label}
+          role="button"
+          tabIndex={0}
+          aria-label={n.label}
+          aria-pressed={lit(n.label)}
           onPointerDown={(e) => down(e, i + 1, n.label)}
           onPointerUp={up}
           onPointerCancel={up}
+          onKeyDown={(e) => keyActivate(e, n.label)}
           className={styles.node}
           style={{ left: b[i + 1].x - grab / 2, top: b[i + 1].y - grab / 2, width: grab, height: grab, cursor: held ? "grabbing" : "grab" }}
         >

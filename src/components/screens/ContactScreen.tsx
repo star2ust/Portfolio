@@ -15,7 +15,7 @@ export interface ContactScreenProps {
  *  contact rows reveal left→right with fade, staggered. */
 export function ContactScreen({ settings }: ContactScreenProps) {
   return (
-    <div className={styles.stage}>
+    <main className={styles.stage}>
       <SiteChrome active="КОНТАКТЫ" />
       <div className={styles.center}>
         <div className={styles.block}>
@@ -37,6 +37,6 @@ export function ContactScreen({ settings }: ContactScreenProps) {
       <div className={styles.footer}>
         <Logo tone="ink" />
       </div>
-    </div>
+    </main>
   );
 }

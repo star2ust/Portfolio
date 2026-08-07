@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, Ref } from "react";
 import styles from "./IconButton.module.css";
 
 export interface IconButtonProps {
@@ -13,6 +13,8 @@ export interface IconButtonProps {
    *  wrapped by another interactive element (a Link or button), since HTML forbids nesting
    *  interactive content and React will hydration-error on it otherwise. */
   as?: "button" | "span";
+  /** only meaningful when as="button" — e.g. PrimaryNav focuses this on menu open */
+  ref?: Ref<HTMLButtonElement>;
 }
 
 const FILES: Record<string, string> = {
@@ -22,7 +24,7 @@ const FILES: Record<string, string> = {
 };
 
 /** Back / close / diagonal glyph. The three raster icons in the whole system, tinted via CSS mask. */
-export function IconButton({ icon = "back", size = 48, label, onClick, style, className, as = "button" }: IconButtonProps) {
+export function IconButton({ icon = "back", size = 48, label, onClick, style, className, as = "button", ref }: IconButtonProps) {
   const url = FILES[icon] ?? FILES.back;
   const glyph = <span className={styles.glyph} style={{ WebkitMaskImage: `url(${url})`, maskImage: `url(${url})` }} />;
 
@@ -36,6 +38,7 @@ export function IconButton({ icon = "back", size = 48, label, onClick, style, cl
 
   return (
     <button
+      ref={ref}
       type="button"
       aria-label={label ?? icon}
       onClick={onClick}

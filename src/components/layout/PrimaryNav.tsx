@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { IconButton } from "@/components/core/IconButton";
 import { NavMenu, SITE_NAV } from "@/components/navigation/NavMenu";
@@ -17,6 +17,22 @@ export interface PrimaryNavProps {
  *  button or footer mark but still needs this. */
 export function PrimaryNav({ active, tone = "default" }: PrimaryNavProps) {
   const [open, setOpen] = useState(false);
+  const burgerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  // Move focus into the overlay on open, back to the burger on close (not just visually toggle)
+  // — keyboard users shouldn't lose their place. Escape closes it too, the standard dialog convention.
+  useEffect(() => {
+    if (open) {
+      closeRef.current?.focus();
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setOpen(false);
+      };
+      window.addEventListener("keydown", onKey);
+      return () => window.removeEventListener("keydown", onKey);
+    }
+    burgerRef.current?.focus();
+  }, [open]);
 
   return (
     <>
@@ -25,6 +41,7 @@ export function PrimaryNav({ active, tone = "default" }: PrimaryNavProps) {
       </div>
 
       <button
+        ref={burgerRef}
         type="button"
         className={styles.burger}
         aria-label="меню"
@@ -36,8 +53,17 @@ export function PrimaryNav({ active, tone = "default" }: PrimaryNavProps) {
         <span className={`${styles.bar} ${tone === "invert" ? styles.barInvert : ""}`} />
       </button>
 
-      <div className={`${styles.overlay} ${open ? styles.overlayOpen : ""}`}>
-        <IconButton icon="close" size={34} label="закрыть" className={styles.overlayClose} onClick={() => setOpen(false)} />
+      {/* inert while closed: removes the whole panel from tab order and the AT tree in one
+          go, instead of the offscreen-but-still-focusable trap opacity/pointer-events alone leave */}
+      <div className={`${styles.overlay} ${open ? styles.overlayOpen : ""}`} inert={!open}>
+        <IconButton
+          ref={closeRef}
+          icon="close"
+          size={34}
+          label="закрыть"
+          className={styles.overlayClose}
+          onClick={() => setOpen(false)}
+        />
         <nav className={styles.overlayNav} aria-label="Основная навигация">
           {SITE_NAV.map((item) => (
             <Link

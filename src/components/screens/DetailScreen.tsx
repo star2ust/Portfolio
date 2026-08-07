@@ -26,12 +26,18 @@ export interface DetailScreenProps {
  *  omitted here, same as the source — it would sit over the "Предыдущий" link. */
 export function DetailScreen({ project, prev, next }: DetailScreenProps) {
   return (
-    <div className={styles.stage}>
+    <main className={styles.stage}>
       <SiteChrome icon="close" backHref="/work" />
       <div className={styles.layout}>
         <Appear delay={0} from="up" className={styles.mediaCol}>
           <div className={styles.imageWrap}>
-            <Image src={project.image} alt="" fill sizes="(max-width: 1113px) 100vw, 50vw" className={styles.image} />
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              sizes="(max-width: 1113px) 100vw, 50vw"
+              className={styles.image}
+            />
           </div>
           <div className={styles.placeholderRow}>
             <MediaPlaceholder kind="video" label="Видео" />
@@ -62,10 +68,10 @@ export function DetailScreen({ project, prev, next }: DetailScreenProps) {
         </div>
 
         <div className={styles.pager}>
-          <PrevNextLink direction="prev" href={`/work/${prev.slug}`} thumb={prev.image} />
-          <PrevNextLink direction="next" href={`/work/${next.slug}`} thumb={next.image} />
+          <PrevNextLink direction="prev" href={`/work/${prev.slug}`} thumb={prev.image} projectTitle={prev.title} />
+          <PrevNextLink direction="next" href={`/work/${next.slug}`} thumb={next.image} projectTitle={next.title} />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

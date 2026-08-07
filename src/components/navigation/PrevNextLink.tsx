@@ -6,18 +6,22 @@ import styles from "./PrevNextLink.module.css";
 export interface PrevNextLinkProps {
   direction?: "prev" | "next";
   label?: string;
+  /** the target project's title — visible label alone doesn't say *which* project, so this
+   *  fills out the link's accessible name (e.g. "Следующий проект: поле цветов") */
+  projectTitle?: string;
   href: string;
   thumb?: string;
   style?: CSSProperties;
 }
 
 /** Project pager: label, a 135px arrow shaft (SVG, not an icon), and an optional 60%-opacity thumbnail. */
-export function PrevNextLink({ direction = "next", label, href, thumb, style }: PrevNextLinkProps) {
+export function PrevNextLink({ direction = "next", label, projectTitle, href, thumb, style }: PrevNextLinkProps) {
   const isPrev = direction === "prev";
   const text = label ?? (isPrev ? "Предыдущий" : "Следующий");
   return (
     <Link
       href={href}
+      aria-label={projectTitle ? `${text} проект: ${projectTitle}` : undefined}
       className={`${styles.link} ${isPrev ? styles.prev : styles.next}`}
       style={style}
     >

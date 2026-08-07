@@ -19,13 +19,13 @@ export interface AboutScreenProps {
 export function AboutScreen({ settings }: AboutScreenProps) {
   const [imya, yo, role, contacts] = settings.about.meta;
   return (
-    <div className={styles.stage}>
+    <main className={styles.stage}>
       <SiteChrome active="ОБО МНЕ" />
       <div className={styles.layout}>
         <div className={styles.portraitWrap}>
           <Image
             src={settings.about.portrait}
-            alt=""
+            alt={settings.name}
             fill
             sizes="(max-width: 1113px) 100vw, 30vw"
             className={styles.portrait}
@@ -71,6 +71,6 @@ export function AboutScreen({ settings }: AboutScreenProps) {
           <FooterLogo />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

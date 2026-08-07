@@ -23,7 +23,11 @@ export function ProjectCard({ href, title, tech, year, image, priority, style }:
             src={image}
             alt=""
             fill
-            sizes="(max-width: 767px) 90vw, (max-width: 1113px) 45vw, 33vw"
+            // Matches the actual grid (WorkScreen.module.css): 2 columns on mobile (~42vw per
+            // card, not full-bleed), 3 columns everywhere else (~31vw). The previous guess
+            // (90vw on mobile) told Next to fetch a ~2x-oversized variant — confirmed by
+            // Lighthouse's image-delivery audit flagging ~95% of the mobile payload as wasted.
+            sizes="(max-width: 767px) 42vw, (max-width: 1113px) 31vw, (max-width: 1920px) 31vw, 602px"
             className={styles.img}
             priority={priority}
           />

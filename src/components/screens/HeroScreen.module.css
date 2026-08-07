@@ -7,6 +7,11 @@
   overflow: hidden;
 }
 
+.videoWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
 .video {
   position: absolute;
   inset: 0;
@@ -14,6 +19,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: opacity 420ms var(--ease);
 }
 /* tablet portrait: the video is contained rather than cropped, so the frame reads at
    portrait proportions (project/ui_kits/portfolio-tablet/TabletHeroScreen.jsx) */
@@ -24,9 +30,9 @@
 }
 /* mobile: a fixed-height band (70% of the 360×800 anchor) rather than full-bleed */
 @media (max-width: 767px) {
-  .video {
+  .videoWrap {
+    inset: 0 0 auto 0;
     height: 70%;
-    object-fit: cover;
   }
 }
 
