@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stardust — портфолио Хабарова Егора
 
-## Getting Started
+Next.js-сайт: адаптивная вёрстка на 5 брейкпоинтах (360 / 768 / 1024 / 1440 / 1920), контент редактируется через Sanity Studio без кода.
 
-First, run the development server:
+## Локальный запуск
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Открыть **http://localhost:3000**. Пока Sanity не настроен (см. ниже), сайт работает на «сид»-контенте из `src/lib/content.ts` — тех же реальных текстах/фото, что были в исходном дизайне.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Настройка Sanity (редактирование контента без кода)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Зарегистрируйся на **sanity.io** (можно через тот же GitHub-аккаунт).
+2. Создай новый проект (Create project) — запомни его **Project ID**.
+3. Скопируй `.env.example` в `.env.local` и заполни:
+   ```
+   NEXT_PUBLIC_SANITY_PROJECT_ID=<твой project id>
+   NEXT_PUBLIC_SANITY_DATASET=production
+   ```
+4. Запусти `npm run dev` и открой **http://localhost:3000/studio** — это и есть админка. Сначала она будет пустая.
 
-## Learn More
+### Заполнить реальным контентом одной командой
 
-To learn more about Next.js, take a look at the following resources:
+Вместо того чтобы вручную вбивать все 9 проектов и 11 навыков заново, можно один раз перенести их из кода в Sanity:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. В Sanity-проекте: **Settings → API → Tokens → Add API token**, права **Editor**, скопировать токен.
+2. Добавить в `.env.local`: `SANITY_API_TOKEN=<токен>`
+3. Запустить:
+   ```bash
+   npm run seed
+   ```
+   Это загрузит все фото и создаст 9 проектов, 11 навыков и настройки сайта в Sanity — дальше их можно редактировать через `/studio`. Команду безопасно запускать повторно (данные обновятся на месте, не задублируются).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Деплой (Vercel)
 
-## Deploy on Vercel
+1. **vercel.com → Sign Up → Continue with GitHub**.
+2. **Add New → Project** → выбрать этот репозиторий → **Deploy**.
+3. В настройках проекта на Vercel (**Settings → Environment Variables**) добавить те же переменные, что в `.env.local`, **кроме** `SANITY_API_TOKEN` (он нужен только для `npm run seed`, на самом сайте не используется) — добавить:
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
+   - `NEXT_PUBLIC_SANITY_DATASET`
+   - `SANITY_REVALIDATE_SECRET` — придумать любую случайную строку.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Мгновенное обновление после публикации
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Чтобы изменения в Studio сразу появлялись на живом сайте (без пересборки):
+
+1. В Sanity-проекте: **Settings → API → Webhooks → Create webhook**.
+2. URL: `https://<твой-домен>.vercel.app/api/revalidate`
+3. Dataset: `production`, Trigger on: **Create / Update / Delete**.
+4. Secret: та же строка, что в `SANITY_REVALIDATE_SECRET` на Vercel.
+
+## Структура
+
+- `src/app/` — страницы (Next.js App Router)
+- `src/components/` — компоненты дизайн-системы (core/navigation/typography/data/graphics/media) и экраны (screens/)
+- `src/motion/` — анимации (прелоадер, переходы между страницами, реакции на скролл)
+- `src/sanity/` — схема CMS, GROQ-запросы, клиент
+- `src/lib/content.ts` — типы + сид-данные (резервный контент, пока Sanity не настроен)
+- `scripts/` — `verify.mjs`/`screenshot.mjs` (проверка вёрстки на всех брейкпоинтах), `seed-sanity.mjs` (перенос контента в Sanity)

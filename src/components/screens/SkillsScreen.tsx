@@ -6,11 +6,14 @@ import { SkillGraph } from "@/components/graphics/SkillGraph";
 import { SkillHeading } from "@/components/typography/SkillHeading";
 import { LevelDots } from "@/components/graphics/LevelDots";
 import { Appear } from "@/motion/Appear";
-import { SKILLS, SITE, type Skill } from "@/lib/content";
+import type { Skill } from "@/lib/content";
 import { pickSkillGraphBase, scaleSkillGraphConfig } from "./skillGraphConfig";
 import styles from "./SkillsScreen.module.css";
 
-const NODES = SKILLS.map((s) => ({ label: s.name, parent: s.parent }));
+export interface SkillsScreenProps {
+  skills: Skill[];
+  emptyState: string;
+}
 
 type PanelState = "hidden" | "entering" | "shown" | "exiting";
 
@@ -21,10 +24,11 @@ type PanelState = "hidden" | "entering" | "shown" | "exiting";
  *  straight to a different node swaps the text instantly, no animation; deselecting (clicking
  *  empty space) slides the whole panel out to the right and fades it; selecting again replays
  *  the entrance. */
-export function SkillsScreen() {
+export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
   const [active, setActive] = useState<string | null>(null);
   const [displayed, setDisplayed] = useState<Skill | null>(null);
   const [panelState, setPanelState] = useState<PanelState>("hidden");
+  const nodes = skills.map((s) => ({ label: s.name, parent: s.parent }));
 
   // React's documented "adjust state during render" pattern: derive displayed/panelState the
   // instant `active` changes, without a useEffect round-trip. See
@@ -33,7 +37,7 @@ export function SkillsScreen() {
   if (active !== prevActive) {
     setPrevActive(active);
     if (active) {
-      setDisplayed(SKILLS.find((s) => s.name === active) ?? null);
+      setDisplayed(skills.find((s) => s.name === active) ?? null);
       setPanelState(prevActive ? "shown" : "entering"); // swap instantly vs. sequence in
     } else {
       setPanelState("exiting");
@@ -89,7 +93,7 @@ export function SkillsScreen() {
         <div ref={containerRef} className={styles.graphWrap}>
           {config ? (
             <SkillGraph
-              nodes={NODES}
+              nodes={nodes}
               active={active ?? undefined}
               onSelect={setActive}
               onDeselect={() => setActive(null)}
@@ -135,7 +139,7 @@ export function SkillsScreen() {
               </>
             )
           ) : (
-            <p className={styles.empty}>{SITE.skills.emptyState}</p>
+            <p className={styles.empty}>{emptyState}</p>
           )}
         </div>
       </div>

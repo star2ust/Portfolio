@@ -5,11 +5,13 @@ import { ProjectMeta } from "@/components/media/ProjectMeta";
 import { PrevNextLink } from "@/components/navigation/PrevNextLink";
 import { Appear } from "@/motion/Appear";
 import { GrowRule } from "@/motion/GrowRule";
-import { getAdjacentProjects, type Project } from "@/lib/content";
+import type { Project } from "@/lib/content";
 import styles from "./DetailScreen.module.css";
 
 export interface DetailScreenProps {
   project: Project;
+  prev: Project;
+  next: Project;
 }
 
 /** Project detail — text column (index, title, role, body, Задачи/Результат) beside the media
@@ -22,8 +24,7 @@ export interface DetailScreenProps {
  *  shared layout), which is a meaningfully bigger piece deferred past this pass; the image
  *  cross-fades in with the rest of the media column instead. The footer mark is intentionally
  *  omitted here, same as the source — it would sit over the "Предыдущий" link. */
-export function DetailScreen({ project }: DetailScreenProps) {
-  const { prev, next } = getAdjacentProjects(project.slug);
+export function DetailScreen({ project, prev, next }: DetailScreenProps) {
   return (
     <div className={styles.stage}>
       <SiteChrome icon="close" backHref="/work" />

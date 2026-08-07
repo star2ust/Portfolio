@@ -3,8 +3,12 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { FooterLogo } from "@/components/layout/FooterLogo";
 import { MetaField } from "@/components/data/MetaField";
 import { Appear } from "@/motion/Appear";
-import { SITE } from "@/lib/content";
+import type { SiteSettings } from "@/lib/content";
 import styles from "./AboutScreen.module.css";
+
+export interface AboutScreenProps {
+  settings: SiteSettings;
+}
 
 /** Обо мне — portrait beside (desktop/laptop/tablet-landscape) or above (tablet-portrait/mobile)
  *  the copy, a title+lede, two body paragraphs, and a three-group fact strip
@@ -12,15 +16,15 @@ import styles from "./AboutScreen.module.css";
  *
  *  §4: title reveals left→right, then the subtitle, then the two body blocks top→bottom with
  *  blur — the layout fix (ИМЯ/Y.O. sharing one rule) is already just how the layout is built. */
-export function AboutScreen() {
-  const [imya, yo, role, contacts] = SITE.about.meta;
+export function AboutScreen({ settings }: AboutScreenProps) {
+  const [imya, yo, role, contacts] = settings.about.meta;
   return (
     <div className={styles.stage}>
       <SiteChrome active="ОБО МНЕ" />
       <div className={styles.layout}>
         <div className={styles.portraitWrap}>
           <Image
-            src={SITE.about.portrait}
+            src={settings.about.portrait}
             alt=""
             fill
             sizes="(max-width: 1113px) 100vw, 30vw"
@@ -29,20 +33,20 @@ export function AboutScreen() {
         </div>
         <div className={styles.copy}>
           <Appear delay={0} from="left">
-            <h1 className={styles.title}>{SITE.about.title}</h1>
+            <h1 className={styles.title}>{settings.about.title}</h1>
           </Appear>
           <Appear delay={140} from="left">
-            <p className={styles.lede}>{SITE.about.lede}</p>
+            <p className={styles.lede}>{settings.about.lede}</p>
           </Appear>
           <Appear delay={210} from="left">
             <div className={styles.rule} />
           </Appear>
           <div className={styles.bodyCols}>
             <Appear delay={280} from="up" blur>
-              <p className={styles.body}>{SITE.about.body1}</p>
+              <p className={styles.body}>{settings.about.body1}</p>
             </Appear>
             <Appear delay={420} from="up" blur>
-              <p className={styles.body}>{SITE.about.body2}</p>
+              <p className={styles.body}>{settings.about.body2}</p>
             </Appear>
           </div>
           <Appear delay={560} from="up">

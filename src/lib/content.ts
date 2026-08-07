@@ -1,21 +1,19 @@
 /**
- * Phase 2 placeholder content — mirrors project/ui_kits/portfolio/data.js, the one real
- * content the design bundle shipped. Grid captions/tech/year/images below are the author's
- * actual Figma copy. The detail fields (role/body/tasks/result) only exist for real on ONE
- * project in the source (the prev/next pager was "decorative" there — README's words) — that
- * text is attached below to project 9 ("УПНЛ"), whose subject (continuous-casting / литейный
- * цех) matches it. The other 8 projects get an explicit placeholder body instead of invented
- * biography; Phase 4 replaces this whole module with a `next-sanity` fetch of the same shape.
+ * Types + seed content for the site. Live content comes from Sanity (src/sanity/queries.ts)
+ * once NEXT_PUBLIC_SANITY_PROJECT_ID / _DATASET are set — see src/sanity/env.ts. Until then,
+ * and as the one-time payload for scripts/seed-sanity.mjs, the SEED_* exports below carry the
+ * real copy transcribed from the source Figma export (project/ui_kits/portfolio/*Screen.jsx) —
+ * not placeholder, except where noted.
  */
 
 export interface Project {
-  id: number;
   slug: string;
   title: string;
   /** kept as free text so the "\" separator convention survives, e.g. "touchdesigner \\ unity" */
   tech: string;
   year: string;
   image: string;
+  gallery?: string[];
   index: string; // "01".."09" — the detail page's standing index mark
   role: string;
   body: string;
@@ -24,96 +22,137 @@ export interface Project {
   vimeoUrl?: string;
 }
 
-const PLACEHOLDER_DETAIL = {
+export interface Skill {
+  name: string;
+  level: number;
+  body: string;
+  /** links this node to a parent instead of the hub, mirrors SkillGraphNode */
+  parent?: string;
+}
+
+export interface SpecRow {
+  label: string;
+  value: string;
+}
+
+export interface ContactRow {
+  label: string;
+  value: string;
+  href: string;
+  mark: boolean;
+}
+
+export interface SiteSettings {
+  name: string;
+  role: string;
+  heroSpecs: SpecRow[];
+  about: {
+    title: string;
+    lede: string;
+    body1: string;
+    body2: string;
+    portrait: string;
+    meta: SpecRow[];
+  };
+  work: { lede: string };
+  skills: { emptyState: string };
+  contact: { title: string; rows: ContactRow[] };
+}
+
+/** Pure helpers over an already-fetched array — shared by the live (Sanity) and seed paths so
+ *  "previous/next" and "find by slug" logic only exists once. */
+export function findProjectBySlug(projects: Project[], slug: string): Project | undefined {
+  return projects.find((p) => p.slug === slug);
+}
+
+export function findAdjacentProjects(projects: Project[], slug: string): { prev: Project; next: Project } {
+  const i = projects.findIndex((p) => p.slug === slug);
+  const prev = projects[(i - 1 + projects.length) % projects.length];
+  const next = projects[(i + 1) % projects.length];
+  return { prev, next };
+}
+
+const SEED_DETAIL_PLACEHOLDER = {
   role: "Роль: —",
-  body: "Описание проекта. Заполняется через Sanity Studio (/studio) — Phase 4.",
+  body: "Описание проекта. Заполняется через Sanity Studio (/studio).",
   tasks: ["Добавьте задачи через Sanity"],
-  result: "Результат проекта. Заполняется через Sanity Studio — Phase 4.",
+  result: "Результат проекта. Заполняется через Sanity Studio.",
 };
 
-export const PROJECTS: Project[] = [
+export const SEED_PROJECTS: Project[] = [
   {
-    id: 1,
     slug: "veb-generative",
     title: "генеративная графика для стенда компании “ВЭБ.РФ” на ПМФ 2026",
     tech: "touchdesigner \\ unity",
     year: "2026",
     image: "/images/work/veb-generative.jpg",
     index: "01",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 2,
     slug: "info-panels",
     title: "информационные панели для школ, музеев, мероприятий",
     tech: "unity",
     year: "2025",
     image: "/images/work/info-panels.png",
     index: "02",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 3,
     slug: "field-of-flowers",
     title: "интерактивная инсталляция “поле цветов”",
     tech: "touchdesigner",
     year: "2024",
     image: "/images/work/field-of-flowers.png",
     index: "03",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 4,
     slug: "labyrinth",
     title: "интерактивная инсталляция “лабиринт” в национальном центре “Россия”",
     tech: "touchdesigner \\ unity",
     year: "2025",
     image: "/images/work/labyrinth.png",
     index: "04",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 5,
     slug: "kinect-projection",
     title: "проекционная инсталляция с кинектом",
     tech: "touchdesigner \\ kinect",
     year: "2025",
     image: "/images/work/kinect-projection.png",
     index: "05",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 6,
     slug: "sanctum",
     title: "vr тренажер для обучения работе с рентгеновским оборудованием",
     tech: "unity vr",
     year: "2025",
     image: "/images/work/sanctum.jpg",
     index: "06",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 7,
     slug: "bci-viz",
     title: "визуализация мозговой активности человека с помощью нейрокомпьютерного интерфейса",
     tech: "touchdesigner \\ bci",
     year: "2025",
     image: "/images/work/bci-viz.png",
     index: "07",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 8,
     slug: "photogrammetry",
     title: "коллекция археологических артефактов сибирского федерального университета",
     tech: "фотограмметрия",
     year: "2024",
     image: "/images/work/photogrammetry.png",
     index: "08",
-    ...PLACEHOLDER_DETAIL,
+    ...SEED_DETAIL_PLACEHOLDER,
   },
   {
-    id: 9,
     slug: "vr-upnl",
     title: "vr тренажер “УПНЛ” для подготовки студентов к работе в литейном цеху",
     tech: "unity vr",
@@ -135,26 +174,7 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-export function getProjectBySlug(slug: string): Project | undefined {
-  return PROJECTS.find((p) => p.slug === slug);
-}
-
-export function getAdjacentProjects(slug: string): { prev: Project; next: Project } {
-  const i = PROJECTS.findIndex((p) => p.slug === slug);
-  const prev = PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length];
-  const next = PROJECTS[(i + 1) % PROJECTS.length];
-  return { prev, next };
-}
-
-export interface Skill {
-  name: string;
-  level: number;
-  body: string;
-  /** links this node to a parent instead of the hub, mirrors SkillGraphNode */
-  parent?: string;
-}
-
-export const SKILLS: Skill[] = [
+export const SEED_SKILLS: Skill[] = [
   {
     name: "TouchDesigner",
     level: 4,
@@ -217,7 +237,7 @@ export const SKILLS: Skill[] = [
 
 // All copy below is the author's real text, transcribed verbatim from the source Figma export
 // (project/ui_kits/portfolio/{Hero,About,Contact}Screen.jsx) — not placeholder.
-export const SITE = {
+export const SEED_SITE_SETTINGS: SiteSettings = {
   name: "Хабаров Егор",
   role: "Interactive Developer",
   heroSpecs: [

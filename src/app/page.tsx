@@ -1,5 +1,7 @@
 import { HeroScreen } from "@/components/screens/HeroScreen";
+import { getSiteSettings } from "@/sanity/queries";
 
-export default function HeroPage() {
-  return <HeroScreen />;
+export default async function HeroPage() {
+  const settings = await getSiteSettings();
+  return <HeroScreen settings={settings} />;
 }
