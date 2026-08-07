@@ -8,9 +8,12 @@
 .item {
   font-family: var(--font-core);
   font-weight: var(--fw-regular);
-  font-size: var(--fs-nav);
+  /* Not var(--fs-nav)/var(--ls-wide) directly: those are shared with PrevNextLink, ProjectMeta,
+     MetaField and FooterMark, which weren't asked to shrink — this menu gets its own smaller
+     size and tighter tracking instead of touching the shared tokens. */
+  font-size: calc(var(--fs-nav) - 2px);
   line-height: var(--lh-tight);
-  letter-spacing: var(--ls-wide);
+  letter-spacing: 0.01em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--text-nav);

@@ -37,7 +37,7 @@
   margin: 0;
   font-family: var(--font-core);
   font-weight: var(--fw-light);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--text-muted);
   opacity: 0.42;
@@ -82,7 +82,7 @@
      body text runs long enough to threaten .sideBySide's hard height cap (no page scroll on
      this tier — see below): it scrolls within the panel instead of quietly clipping under it. */
   top: 50%;
-  transform: translateY(calc(-50% - 64px));
+  transform: translateY(calc(-50% - 160px));
   width: 320px;
   max-height: calc(100dvh - 120px);
   overflow-y: auto;

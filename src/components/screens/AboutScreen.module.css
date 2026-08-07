@@ -110,10 +110,16 @@
 }
 
 /* ---------- tablet landscape / laptop / desktop: a real 12-column grid (40px margins, 20px
-   gutter, per the client's own Figma grid) — two 3-column body-text blocks, an empty 1-column
-   gap, then a 5-column photo. .stage is height-capped here (no page scroll, matching the
-   source's fixed-canvas feel); .copy scrolls internally on the rare case its own content
-   doesn't fit, same fallback pattern as the detail page's text column. ---------- */
+   gutter, per the client's own Figma grid, cross-checked against project/ui_kits/portfolio/
+   AboutScreen.jsx's literal numbers at 1920: photo left:1280 width:445 top:0 height:1080 —
+   that's exactly 3 columns (9–11: 3×135 + 2×20 = 445) starting at column 9's line, with column
+   12 left as a blank 1-column margin before the true edge, and 2 blank columns (7–8) between it
+   and the 6-column (1–6) text block.
+   .stage is height-capped (no page scroll, matching the source's fixed-canvas feel). The photo
+   bleeds the *entire* stage height edge to edge, same as the source's top:0/height:1080 — so
+   the chrome-clearance padding lives on .copy alone (not .layout, which the photo also reads),
+   .copy scrolling internally on the rare case its own content doesn't fit, same fallback
+   pattern as the detail page's text column. ---------- */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
   .stage {
     height: 100dvh;
@@ -126,12 +132,10 @@
     row-gap: 0;
     align-content: stretch;
     height: 100%;
-    padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) var(--page-gutter) 40px;
+    padding: 0 var(--page-gutter);
   }
   .portraitWrap {
-    /* 2 columns (10–11), leaving column 12 as a deliberate blank margin before the true edge —
-       not the standard page-gutter alone, an extra full column beyond it. */
-    grid-column: 10 / 12;
+    grid-column: 9 / 12;
     order: 2;
     width: auto;
     aspect-ratio: auto;
@@ -142,7 +146,10 @@
     order: 1;
     margin: 0;
     max-width: none;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) 0 40px;
     overflow-y: auto;
     min-height: 0;
   }
