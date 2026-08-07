@@ -1,0 +1,48 @@
+.link {
+  display: flex;
+  flex-direction: column;
+  width: 135px;
+  color: var(--sd-grey-b2);
+}
+
+.label {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-nav);
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+  padding-bottom: 8px;
+  color: inherit;
+  transition: color var(--dur) var(--ease);
+}
+.prev .label { text-align: right; }
+.next .label { text-align: left; }
+
+.shaft {
+  display: block;
+}
+.shaft path {
+  stroke: currentColor;
+  transition: stroke var(--dur) var(--ease);
+}
+.prev .shaft { transform: scaleX(-1); }
+
+.thumbWrap {
+  position: relative;
+  display: block;
+  width: 135px;
+  height: 95px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.thumb {
+  object-fit: cover;
+  opacity: 0.6;
+  transition: opacity var(--dur) var(--ease);
+}
+.link:hover {
+  color: var(--accent);
+}
+.link:hover .thumb {
+  opacity: 1;
+}

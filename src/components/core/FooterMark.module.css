@@ -1,0 +1,10 @@
+.mark {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-nav);
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+}
+.muted { color: var(--text-muted); }
+.label { color: var(--text-label); }
+.invert { color: var(--text-invert); }

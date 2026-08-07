@@ -1,0 +1,8 @@
+.back {
+  position: fixed;
+  left: var(--page-gutter);
+  top: var(--chrome-back-top);
+  width: var(--chrome-icon-size);
+  height: var(--chrome-icon-size);
+  z-index: 30;
+}

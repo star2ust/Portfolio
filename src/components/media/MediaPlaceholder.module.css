@@ -1,0 +1,21 @@
+.wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video { background: var(--surface-video); }
+.image { background: var(--surface-media); }
+
+.label {
+  font-family: var(--font-core);
+  font-weight: var(--fw-light);
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-loose);
+  letter-spacing: var(--ls-wide);
+  color: var(--text-body);
+  white-space: nowrap;
+}

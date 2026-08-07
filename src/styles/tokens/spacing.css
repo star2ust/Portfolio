@@ -1,0 +1,35 @@
+/* Spacing & geometry that does NOT change with viewport — hairlines, radii, the desktop
+   canvas reference numbers. Viewport-fluid layout tokens (page gutter, nav column, dot
+   sizes) live in tokens/breakpoints.css. */
+:root{
+  --space-2:2px;
+  --space-9:9px;
+  --space-10:10px;
+  --space-20:20px;      /* project grid column gap, desktop */
+  --space-21:21px;
+  --space-40:40px;
+  --space-48:48px;
+  --space-84:84px;      /* project grid row gap, desktop */
+
+  --page-w:1920px;
+  --page-h:1080px;
+  --col-narrow:290px;   /* Задачи / Результат column, desktop */
+  --col-text:445px;     /* about + skill copy column, desktop */
+  --col-wide:600px;     /* rule + description column, desktop */
+  --card-w:601.667px;   /* work grid card, desktop */
+  --card-media-h:337.282px;
+  --rail-w:135px;       /* right rail: video / slider / prev-next thumb */
+
+  --hair:0.25px;        /* card + label hairline */
+  --hair-strong:0.5px;  /* display underline */
+  --rule-arrow:1px;
+
+  --radius-none:0;
+  --radius-board:2px;
+  --radius-round:50%;
+
+  --dot-level:34px;     /* proficiency dots, desktop */
+  --dot-node:35px;      /* graph node, desktop */
+  --icon-nav:48px;      /* back / close glyph, desktop */
+  --icon-inline:30px;   /* inline ↗ mark */
+}

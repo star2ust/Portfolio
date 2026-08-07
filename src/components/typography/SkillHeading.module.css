@@ -1,0 +1,27 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.title {
+  margin: 0;
+  font-family: var(--font-core);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-skill);
+  line-height: var(--lh-tight);
+  color: var(--text-body);
+  white-space: nowrap;
+}
+.mark {
+  margin-top: -6px;
+}
+.rule {
+  height: 0.25px;
+  background: var(--rule-hairline);
+  margin-top: 21px;
+}

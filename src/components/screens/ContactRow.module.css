@@ -1,0 +1,54 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  color: var(--text-body);
+  transition: color var(--dur) var(--ease);
+}
+.row:hover {
+  color: var(--accent);
+}
+
+.text {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-loose);
+  letter-spacing: var(--ls-wide);
+  white-space: nowrap;
+}
+
+.mark {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: var(--text-body);
+  mask: url(/icons/arrow-diagonal.png) center / contain no-repeat;
+  -webkit-mask: url(/icons/arrow-diagonal.png) center / contain no-repeat;
+  transition: background var(--dur) var(--ease);
+}
+.row:hover .mark {
+  background: var(--accent);
+}
+
+@media (max-width: 767px) {
+  .text { font-size: var(--fs-meta); }
+  .mark { width: 18px; height: 18px; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .text { font-size: 16px; }
+  .mark { width: 22px; height: 22px; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .text { font-size: 17px; }
+  .mark { width: 22px; height: 22px; }
+}
+@media (min-width: 1114px) {
+  .text { font-size: 17px; }
+  .mark { width: 24px; height: 24px; }
+}
+@media (min-width: 1920px) {
+  .text { font-size: var(--fs-body-lg); }
+  .mark { width: 30px; height: 30px; }
+}

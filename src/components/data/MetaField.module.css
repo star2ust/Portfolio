@@ -1,0 +1,22 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.label {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-nav); /* 14px */
+  line-height: var(--lh-tight);
+  color: var(--text-label);
+  white-space: nowrap;
+}
+.value {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-meta); /* 13px */
+  line-height: var(--lh-tight);
+  color: var(--text-strong);
+  white-space: pre-line;
+  text-align: inherit;
+}

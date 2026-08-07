@@ -1,0 +1,148 @@
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  background: var(--surface-page);
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) var(--page-gutter) 60px;
+  gap: 32px;
+}
+
+.portraitWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 6 / 5;
+  flex-shrink: 0;
+  order: 1;
+}
+.portrait {
+  object-fit: cover;
+  object-position: 41% 97%;
+}
+
+.copy {
+  order: 2;
+  display: flex;
+  flex-direction: column;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.title {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 30px;
+  line-height: var(--lh-tight);
+  color: var(--text-body);
+}
+.lede {
+  margin: 0;
+  padding-top: 22px;
+  text-align: center;
+  font-family: var(--font-core);
+  font-weight: var(--fw-medium);
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.rule {
+  height: 0.25px;
+  background: var(--rule-hairline);
+  margin-top: 26px;
+}
+
+.bodyCols {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 26px;
+}
+.body {
+  margin: 0;
+  flex: 1;
+  font-family: var(--font-core);
+  font-weight: var(--fw-light);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-body);
+  white-space: pre-line;
+  text-wrap: pretty;
+}
+
+.metaRow {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 36px;
+}
+.metaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+}
+.metaRule {
+  height: 0.25px;
+  background: var(--rule-hairline);
+}
+.metaFields {
+  display: flex;
+  gap: 21px;
+}
+
+/* ---------- tablet portrait: title/lede/portrait-band/rule/columns, same stacked shape as
+   mobile but roomier — matches TabletAboutScreen.jsx's 672×300 band ---------- */
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .title { font-size: 27px; }
+  .lede { font-size: 16px; }
+  .body { font-size: 14px; }
+  .bodyCols { flex-direction: row; }
+  .metaRow { flex-direction: row; }
+  .portraitWrap { aspect-ratio: 672 / 300; }
+}
+
+/* ---------- tablet landscape / laptop / desktop: portrait as a side column ---------- */
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
+  .layout {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 40px;
+  }
+  .portraitWrap {
+    order: 2;
+    width: 250px;
+    aspect-ratio: auto;
+    flex: 0 0 auto;
+  }
+  .copy {
+    order: 1;
+    margin: 0;
+    flex: 1;
+    justify-content: center;
+    max-width: 960px;
+  }
+  .bodyCols { flex-direction: row; }
+  .metaRow { flex-direction: row; }
+}
+
+@media (min-width: 1114px) {
+  .portraitWrap { width: 290px; }
+  .title { font-size: 36px; }
+  .lede { font-size: 20px; }
+  .body { font-size: 15px; }
+}
+
+@media (min-width: 1920px) {
+  .portraitWrap { width: 445px; }
+  .title { font-size: 43px; }
+  .lede { font-size: 24px; }
+  .body { font-size: 16px; }
+}

@@ -1,0 +1,73 @@
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  background: var(--surface-page);
+}
+
+.layout {
+  padding-top: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px);
+}
+
+.graphWrap {
+  width: 100%;
+}
+
+.body {
+  margin: 0;
+  padding-top: 24px;
+  font-family: var(--font-core);
+  font-weight: var(--fw-light);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-body);
+  white-space: pre-line;
+  text-wrap: pretty;
+}
+
+.empty {
+  margin: 0;
+  font-family: var(--font-core);
+  font-weight: var(--fw-light);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  opacity: 0.42;
+  text-align: center;
+}
+
+/* ---------- stacked (mobile, tablet-portrait): panel below the graph, in flow ---------- */
+.stacked .panel {
+  position: static;
+  width: 100%;
+  padding: 24px var(--page-gutter) 0;
+}
+
+/* ---------- side (tablet-landscape, laptop, desktop): panel overlays the graph's left
+   edge — the graph's own centerX is already shifted right to leave visual room for it,
+   same as the source (they share one absolute-positioned stacking context, not two columns) ---------- */
+.sideBySide {
+  position: relative;
+}
+.sideBySide .panel {
+  position: absolute;
+  left: var(--page-gutter);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+}
+
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .body { font-size: 14px; }
+  .stacked .panel { max-width: 672px; margin: 0 auto; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .body { font-size: 13px; }
+}
+@media (min-width: 1114px) {
+  .body { font-size: 14px; }
+  .sideBySide .panel { width: 360px; }
+}
+@media (min-width: 1920px) {
+  .body { font-size: var(--fs-body); }
+  .sideBySide .panel { width: 447px; left: 40px; }
+}

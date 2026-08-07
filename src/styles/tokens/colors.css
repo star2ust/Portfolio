@@ -1,0 +1,63 @@
+/* Base palette — ported verbatim from the Stardust design system (project/tokens/colors.css). */
+:root{
+  /* neutrals — the whole portfolio runs on white paper + graphite ink */
+  --sd-white:#FFFFFF;
+  --sd-paper:#F2F0F6;            /* section board background */
+  --sd-black:#000000;            /* body copy, hairlines on cards */
+  --sd-ink:#1F2125;              /* brand graphite — dots, meta values */
+  --sd-grey-d9:#D9D9D9;          /* media placeholder fill */
+  --sd-grey-b3:#B3B3B3;          /* hairline rules, field labels */
+  --sd-grey-b2:#B2B2B2;          /* nav items, icon tint, prev/next */
+  --sd-grey-8e:#8E8E8E;          /* index numbers, footer marks */
+  --sd-grey-62:#626976;          /* muted secondary text, graph hub */
+
+  /* brand accents */
+  --sd-orange:#FE7126;           /* the one loud colour — level dots, active/interaction */
+  --sd-violet:#493C8C;           /* held/selected graph node */
+  --sd-navy:#272C4F;
+  --sd-periwinkle:#6E6FC3;       /* outline ring on the skill graph */
+  --sd-green:#4BF467;            /* raw signal green from the moodboard */
+  --sd-slate:#AAB8C9;            /* video placeholder fill */
+
+  /* graph node hues (skills map) — sanctioned chaos, used only inside SkillGraph */
+  --sd-node-magenta:#C36EBD;
+  --sd-node-cyan:#37D1E2;
+  --sd-node-blue:#64A3EA;
+  --sd-node-red:#C36E6E;
+  --sd-node-teal:#89BABF;
+  --sd-node-green:#72C36E;
+  --sd-node-lime:#C2D87A;
+  --sd-node-aqua:#6EC3BF;
+  --sd-node-sand:#B39667;
+  --sd-node-purple:#AE6EC3;
+}
+
+/* semantic aliases */
+:root{
+  --surface-page:var(--sd-white);
+  --surface-board:var(--sd-paper);
+  --surface-media:var(--sd-grey-d9);
+  --surface-video:var(--sd-slate);
+  --surface-invert:var(--sd-ink);
+
+  --text-body:var(--sd-black);
+  --text-strong:var(--sd-ink);
+  --text-muted:var(--sd-grey-8e);
+  --text-label:var(--sd-grey-b3);
+  --text-nav:var(--sd-grey-b2);
+  --text-invert:var(--sd-white);
+
+  --rule-hairline:var(--sd-grey-b3);
+  --rule-ink:var(--sd-black);
+  --rule-invert:var(--sd-white);
+
+  --accent:var(--sd-orange);
+  --accent-ring:var(--sd-periwinkle);
+  --dot-filled:var(--sd-orange);
+  --dot-node:var(--sd-ink);
+
+  --icon-tint:var(--sd-grey-b2);
+
+  --link:var(--sd-black);
+  --link-hover:var(--sd-orange);
+}

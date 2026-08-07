@@ -1,0 +1,38 @@
+/* Typography — Micra for accent display, Montserrat for everything else.
+   Values here are the 1920×1080 (desktop) canonical scale from the design system.
+   Components override individual sizes per breakpoint band (see tokens/breakpoints.css
+   and each component's own responsive CSS) rather than scaling this whole ladder
+   proportionally — the source design re-tuned sizes per breakpoint independently
+   (e.g. work-grid captions run 12 / 10 / 12 / 16 / 18px across the five kits, not
+   a single ratio), so per-component art direction is the accurate model, not a
+   uniform shrink. */
+:root{
+  --font-display:"Micra","Montserrat",sans-serif;
+  --font-core:"Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  --fw-light:300;
+  --fw-regular:400;
+  --fw-medium:500;
+  --fw-semibold:600;
+  --fw-bold:700;
+
+  /* sizes lifted verbatim from the file, desktop (1920×1080) scale */
+  --fs-hero:46px;        /* Micra — name lockup */
+  --fs-display:64px;     /* Montserrat Medium — page title ("Связь.") */
+  --fs-skill:58px;       /* Montserrat Medium — skill name */
+  --fs-title:41px;
+  --fs-lede:35px;        /* Montserrat Regular — centred section lede */
+  --fs-project:31px;     /* Montserrat Medium — project title */
+  --fs-body-lg:20px;     /* Montserrat Light/Regular */
+  --fs-caption:18px;     /* Montserrat Light, uppercase — card captions */
+  --fs-body:16px;        /* Montserrat Light — paragraphs */
+  --fs-nav:14px;         /* Montserrat Regular, uppercase */
+  --fs-meta:13px;
+  --fs-micro:12px;       /* Montserrat Regular/Light — table meta, chips */
+  --fs-nano:11px;
+  --fs-tiny:10px;
+
+  --lh-tight:100%;       /* the file sets almost every block to 100% */
+  --lh-loose:1.3;
+  --ls-wide:0.02em;      /* 2% tracking on captions and contact lines */
+}

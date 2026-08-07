@@ -1,0 +1,121 @@
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  background: #000;
+  overflow: hidden;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* tablet portrait: the video is contained rather than cropped, so the frame reads at
+   portrait proportions (project/ui_kits/portfolio-tablet/TabletHeroScreen.jsx) */
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .video {
+    object-fit: contain;
+  }
+}
+/* mobile: a fixed-height band (70% of the 360×800 anchor) rather than full-bleed */
+@media (max-width: 767px) {
+  .video {
+    height: 70%;
+    object-fit: cover;
+  }
+}
+
+.identity {
+  position: absolute;
+  left: var(--page-gutter);
+  top: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .identity { top: 34px; gap: 14px; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .identity { top: 30px; gap: 14px; }
+}
+@media (min-width: 1114px) {
+  .identity { top: 36px; gap: 16px; }
+}
+@media (min-width: 1440px) {
+  .identity { top: 36px; gap: 16px; }
+}
+@media (min-width: 1920px) {
+  .identity { top: 48px; gap: 22px; }
+}
+
+.logo {
+  width: 52px !important;
+  height: 63px !important;
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .logo { width: 41.7px !important; height: 50px !important; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .logo { width: 38.4px !important; height: 46px !important; }
+}
+@media (min-width: 1114px) {
+  .logo { width: 48.5px !important; height: 58px !important; }
+}
+@media (min-width: 1920px) {
+  .logo { width: 70.4px !important; height: 84px !important; }
+}
+
+.lockup {
+  font-size: 20px;
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .lockup { font-size: 28px; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .lockup { font-size: 26px; }
+}
+@media (min-width: 1114px) {
+  .lockup { font-size: 32px; }
+}
+@media (min-width: 1920px) {
+  .lockup { font-size: 46px; }
+}
+
+.specs {
+  position: absolute;
+  left: var(--page-gutter);
+  right: var(--page-gutter);
+  bottom: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 16px;
+}
+.specs > :first-child {
+  flex: 1 1 100%;
+}
+.specs > :nth-child(2),
+.specs > :nth-child(3) {
+  flex: 1 1 auto;
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .specs { bottom: 30px; gap: 12px; }
+  .specs > :first-child { flex: 1 1 auto; }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .specs { bottom: 34px; gap: 12px; }
+  .specs > :first-child { flex: 1 1 auto; }
+}
+@media (min-width: 1114px) {
+  .specs { bottom: 36px; gap: 14px; }
+  .specs > :first-child { flex: 1 1 auto; }
+}
+@media (min-width: 1920px) {
+  .specs { bottom: 40px; gap: 20px; right: auto; }
+  .specs > :first-child { flex: 1 1 auto; }
+}

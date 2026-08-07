@@ -1,0 +1,13 @@
+.lede {
+  margin: 0;
+  max-width: 1220px;
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-lede);
+  line-height: var(--lh-loose);
+  letter-spacing: var(--ls-wide);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.center { text-align: center; margin-inline: auto; }
+.left { text-align: left; }

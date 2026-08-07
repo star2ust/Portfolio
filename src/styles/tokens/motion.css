@@ -1,0 +1,15 @@
+/* Motion — see guidelines/motion.md (source bundle) for the full choreography spec. Ported verbatim. */
+:root{
+  --dur-fast:120ms;
+  --dur:220ms;
+  --dur-slow:620ms;
+  --dur-arc:900ms;
+  --stagger:90ms;
+
+  --ease:cubic-bezier(0.22,0.61,0.36,1);      /* entrances */
+  --ease-arc:cubic-bezier(0.65,0,0.35,1);     /* the wipe arc */
+
+  --reveal-shift:14px;    /* text rising into place */
+  --reveal-shift-lg:24px; /* wembi-style line reveal */
+  --reveal-blur:8px;      /* About body blocks */
+}

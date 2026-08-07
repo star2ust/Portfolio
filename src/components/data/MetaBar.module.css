@@ -1,0 +1,38 @@
+.bar {
+  width: 100%;
+}
+.rules {
+  display: flex;
+  gap: 21px;
+  align-items: center;
+}
+.rule {
+  height: 0.25px;
+  background: var(--rule-hairline);
+}
+.row {
+  display: flex;
+  gap: 21px;
+  padding-top: 9px;
+}
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.label {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-micro);
+  line-height: var(--lh-tight);
+  color: var(--text-label);
+  white-space: nowrap;
+}
+.value {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-micro);
+  line-height: 1.6;
+  color: var(--text-strong);
+  white-space: pre-line;
+}

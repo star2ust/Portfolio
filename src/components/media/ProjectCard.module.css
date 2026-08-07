@@ -1,0 +1,60 @@
+.card {
+  display: block;
+  width: 100%;
+  color: var(--text-body);
+  transition: color var(--dur) var(--ease);
+}
+.card:hover {
+  color: var(--accent);
+}
+
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 601.667 / 337.282; /* the desktop card's own ratio, held at every breakpoint */
+  background: var(--surface-media);
+  overflow: hidden;
+}
+.img {
+  object-fit: cover;
+}
+
+.body {
+  padding-top: 14px;
+}
+.title {
+  display: block;
+  font-family: var(--font-core);
+  font-weight: var(--fw-light);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-loose);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  text-wrap: pretty;
+  white-space: pre-line;
+}
+.rule {
+  height: 0.25px;
+  background: var(--rule-ink);
+  margin-top: 10px;
+  transition: background var(--dur) var(--ease);
+}
+.card:hover .rule {
+  background: var(--accent);
+}
+.meta {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+.tech,
+.year {
+  font-family: var(--font-core);
+  font-weight: var(--fw-light);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-loose);
+  letter-spacing: var(--ls-wide);
+}
+.tech {
+  text-transform: uppercase;
+}

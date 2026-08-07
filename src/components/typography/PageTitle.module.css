@@ -1,0 +1,27 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+.center { align-items: center; }
+.left { align-items: flex-start; }
+
+.title {
+  margin: 0;
+  font-family: var(--font-core);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  color: var(--text-body);
+  text-transform: capitalize;
+  text-align: inherit;
+}
+.center .title { text-align: center; }
+.left .title { text-align: left; }
+
+.rule {
+  width: 100%;
+  height: 0.5px;
+  background: var(--rule-ink);
+}

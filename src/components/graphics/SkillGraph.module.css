@@ -1,0 +1,56 @@
+.wrap {
+  position: relative;
+  touch-action: none;
+}
+.hitArea {
+  position: absolute;
+  inset: 0;
+}
+.lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.line {
+  stroke: var(--sd-grey-b2);
+  stroke-width: 0.75;
+  opacity: 0.75;
+}
+.node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hub {
+  border-radius: 50%;
+  background: var(--sd-grey-62);
+  transition: background var(--dur) var(--ease);
+}
+.hubHeld {
+  background: var(--sd-violet);
+}
+.dot {
+  border-radius: 50%;
+  background: var(--sd-grey-b3);
+  transition: background var(--dur) var(--ease);
+}
+.dotLit {
+  background: var(--sd-violet);
+}
+.nodeLabel {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-core);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+  user-select: none;
+  color: var(--text-body);
+  transition: color var(--dur) var(--ease);
+}
+.nodeLabelLit {
+  color: var(--sd-violet);
+}

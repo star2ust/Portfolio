@@ -1,0 +1,32 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 290px;
+}
+.rule {
+  height: 0.5px;
+}
+.invert { color: var(--text-invert); }
+.invert .rule { background: var(--rule-invert); }
+.default { color: var(--text-body); }
+.default .rule { background: var(--rule-ink); }
+
+.label {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-meta);
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+  color: inherit;
+}
+.value {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  white-space: pre-line;
+  opacity: 0.85;
+  color: inherit;
+}

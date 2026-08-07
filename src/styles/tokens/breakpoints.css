@@ -1,0 +1,91 @@
+/* ==========================================================================
+   Breakpoint bands — the four mocked anchors, plus the mobile floor.
+
+   ≤ 767px            mobile        anchor 360×800   (burger nav, single column)
+   768–1113px portrait  tablet-portrait  anchor 768×1024  (iPad Air portrait)
+   768–1113px landscape tablet-landscape anchor 1024×768  (iPad Air landscape)
+   1114–1919px         laptop        anchor 1440×900  (density adaptation of desktop)
+   ≥ 1920px            desktop       anchor 1920×1080 (source canvas)
+
+   Tablet portrait/landscape share a width range but are genuinely different,
+   independently art-directed layouts (not two points on one curve), so they're
+   selected by `orientation`, each holding its own anchor's values rather than
+   interpolating between 768 and 1024. Mobile↔tablet and tablet↔laptop↔desktop
+   DO interpolate — see the clamp() ladders below — so widths between the named
+   anchors scale smoothly instead of jump-cutting.
+
+   These pixel numbers are duplicated across the @media queries in this file
+   and in component CSS Modules (CSS has no custom-media-query support without
+   a PostCSS plugin) — keep them in sync with this table if they ever change.
+   ========================================================================== */
+
+/* ---------- page gutter — fluid across the whole range, exact at each anchor ---------- */
+/* --fs-nav below the tablet band falls through to typography.css's 14px default (imported
+   earlier) — mobile has no inline NavMenu to size, so it's never actually read there. */
+:root{
+  --page-gutter: clamp(20px, calc(16.471px + 0.9804vw), 24px); /* 360→20, 768→24 */
+  --fs-caption: clamp(9px, calc(8.118px + 0.2451vw), 10px); /* 360→9, 768→10 — ground truth from MobileWorkScreen.jsx's local override */
+  --fs-meta: 10px; /* Hero SpecBlock — 360→10, flat through the tablet band */
+
+  /* ---- chrome (back button / logo) offsets — banded per breakpoint, not fluid-interpolated:
+     these are small secondary edge offsets, not primary layout drivers, so a discrete swap at
+     each band edge (matching that band's own anchor exactly) is the right amount of precision. ---- */
+  --chrome-back-top: 20px;
+  --chrome-icon-size: 32px;
+  /* The source flows the mobile logo in-document instead of fixing it; SiteChrome fixes it at
+     every breakpoint for simplicity (see its own doc comment), so this still needs a real value. */
+  --chrome-logo-bottom: 20px;
+  --chrome-logo-size: 26px;
+}
+
+@media (min-width: 768px) and (max-width: 1113px) {
+  :root{
+    --page-gutter: 24px; /* flat across both tablet orientations */
+    --fs-nav: 12px; /* portrait default */
+    --fs-caption: 10px; /* portrait default */
+    --fs-meta: 10px;
+    --chrome-back-top: 52px;
+    --chrome-nav-top: 34px;
+    --chrome-icon-size: 34px;
+    --chrome-logo-bottom: 38px;
+    --chrome-logo-size: 40px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  :root{
+    --fs-nav: 11px; --fs-caption: 12px;
+    --chrome-back-top: 48px; --chrome-nav-top: 30px;
+    --chrome-icon-size: 32px; --chrome-logo-bottom: 32px; --chrome-logo-size: 36px;
+  }
+}
+
+@media (min-width: 1114px) {
+  :root{
+    --page-gutter: clamp(24px, calc(3.497px + 1.8405vw), 30px); /* 1114→24, 1440→30 */
+    --fs-nav: 12px;
+    --fs-caption: 16px;
+    --fs-meta: 11px;
+    --chrome-back-top: 56px; --chrome-nav-top: 36px;
+    --chrome-icon-size: 38px; --chrome-logo-bottom: 36px; --chrome-logo-size: 44px;
+  }
+}
+@media (min-width: 1440px) {
+  :root{
+    --page-gutter: clamp(30px, calc(0.000px + 2.0833vw), 40px); /* 1440→30, 1920→40 */
+    --fs-nav: clamp(12px, calc(6.000px + 0.4167vw), 14px);      /* 1440→12, 1920→14 */
+    --fs-caption: clamp(16px, calc(10.000px + 0.4167vw), 18px); /* 1440→16, 1920→18 */
+    --fs-meta: clamp(11px, calc(5.667px + 0.4167vw), 13px);     /* 1440→11, 1920→13 */
+    --chrome-back-top: 80px; --chrome-nav-top: 48px;
+    --chrome-icon-size: 48px; --chrome-logo-bottom: 44px; --chrome-logo-size: 40px;
+  }
+}
+@media (min-width: 1920px) {
+  :root{ --page-gutter: 40px; --fs-nav: 14px; --fs-caption: 18px; --fs-meta: 13px; }
+}
+
+/* Mobile has no persistent inline NavMenu (burger + full-screen overlay instead), so
+   the overlay's own type scale is a separate, non-fluid pair of tokens. */
+:root{
+  --fs-menu-overlay: 18px;
+  --ls-menu-overlay: 15px;
+}

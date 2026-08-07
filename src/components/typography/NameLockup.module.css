@@ -1,0 +1,22 @@
+.lockup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: var(--fs-hero);
+}
+.default { color: var(--text-body); }
+.invert { color: var(--text-invert); }
+
+.role {
+  font-family: var(--font-core);
+  font-weight: var(--fw-regular);
+  font-size: 18px;
+  line-height: var(--lh-tight);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: var(--fw-regular);
+  font-size: 1em; /* inherits --fs-hero, or the per-instance override on .lockup */
+  line-height: var(--lh-tight);
+}
