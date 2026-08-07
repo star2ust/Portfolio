@@ -94,7 +94,13 @@ export function RouteTransition({ children }: { children: ReactNode }) {
   return (
     <>
       {!booted ? <Preloader onDone={onPreloaderDone} /> : null}
-      <div style={{ opacity: booted ? 1 : 0, transition: "opacity 620ms var(--ease)" }}>{children}</div>
+      {/* key={pathname}: forces a real unmount+remount on every navigation. Without it, two
+          routes that render the same component at the same tree position (e.g. /work/a ->
+          /work/b, both DetailScreen) can get reconciled onto the *existing* fiber instead of
+          mounting fresh, so Appear/GrowRule's useEffect-driven entrance timers never refire. */}
+      <div key={pathname} style={{ opacity: booted ? 1 : 0, transition: "opacity 620ms var(--ease)" }}>
+        {children}
+      </div>
 
       {phase === "covering" &&
         (useFadeCover ? <FadeCover onEnd={onCoverComplete} /> : <ArcWipe active onEnd={onCoverComplete} />)}

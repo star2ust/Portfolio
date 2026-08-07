@@ -1,0 +1,53 @@
+.wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--surface-media);
+}
+.image {
+  object-fit: cover;
+  transition: opacity 420ms var(--ease);
+}
+.controls {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: none;
+}
+.arrow {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--surface-page) 82%, transparent);
+  color: var(--text-body);
+}
+.arrow svg path {
+  stroke: currentColor;
+}
+.arrow:hover {
+  color: var(--accent);
+}
+.count {
+  pointer-events: none;
+  font-family: var(--font-core);
+  font-size: 11px;
+  letter-spacing: var(--ls-wide);
+  color: var(--text-body);
+  background: color-mix(in srgb, var(--surface-page) 82%, transparent);
+  padding: 4px 8px;
+  border-radius: 999px;
+}

@@ -34,6 +34,15 @@
   flex: 1;
   height: 60px;
 }
+/* A real slider/video needs more than a 60px chip to be usable — the source's flat placeholder
+   row only ever had to hold a label. Scales with the same breakpoints as the row below. */
+.mediaSlot {
+  height: clamp(120px, 22vw, 220px);
+}
+
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
+  .mediaSlot { height: clamp(140px, 14vw, 240px); }
+}
 
 .textCol {
   order: 2;

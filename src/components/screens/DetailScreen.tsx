@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { MediaPlaceholder } from "@/components/media/MediaPlaceholder";
+import { MediaGallery } from "@/components/media/MediaGallery";
+import { VideoEmbed } from "@/components/media/VideoEmbed";
 import { ProjectMeta } from "@/components/media/ProjectMeta";
 import { PrevNextLink } from "@/components/navigation/PrevNextLink";
 import { Appear } from "@/motion/Appear";
@@ -23,7 +25,13 @@ export interface DetailScreenProps {
  *  card's click-time bounding rect carried across a real navigation (sessionStorage or a
  *  shared layout), which is a meaningfully bigger piece deferred past this pass; the image
  *  cross-fades in with the rest of the media column instead. The footer mark is intentionally
- *  omitted here, same as the source — it would sit over the "Предыдущий" link. */
+ *  omitted here, same as the source — it would sit over the "Предыдущий" link.
+ *
+ *  The video/slider row: the source bundle itself ships these as "labelled placeholders" —
+ *  project/ui_kits/portfolio/README.md calls them "deliberately unfinished, as in the source."
+ *  Once a project has real `gallery`/`vimeoUrl` values in Sanity, this renders an actual photo
+ *  slider and a Vimeo embed in that row instead; a project with neither still falls back to the
+ *  flat placeholder chips, so an empty CMS entry never renders a broken player. */
 export function DetailScreen({ project, prev, next }: DetailScreenProps) {
   return (
     <main className={styles.stage}>
@@ -40,8 +48,16 @@ export function DetailScreen({ project, prev, next }: DetailScreenProps) {
             />
           </div>
           <div className={styles.placeholderRow}>
-            <MediaPlaceholder kind="video" label="Видео" />
-            <MediaPlaceholder kind="image" label="Слайдер" />
+            {project.vimeoUrl ? (
+              <VideoEmbed vimeoUrl={project.vimeoUrl} title={`${project.title} — видео`} className={styles.mediaSlot} />
+            ) : (
+              <MediaPlaceholder kind="video" label="Видео" className={styles.mediaSlot} />
+            )}
+            {project.gallery && project.gallery.length > 0 ? (
+              <MediaGallery images={project.gallery} alt={project.title} className={styles.mediaSlot} />
+            ) : (
+              <MediaPlaceholder kind="image" label="Слайдер" className={styles.mediaSlot} />
+            )}
           </div>
         </Appear>
 
