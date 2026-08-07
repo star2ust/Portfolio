@@ -75,9 +75,17 @@
 .sideBySide .panel {
   position: absolute;
   left: var(--page-gutter);
-  top: 42%;
-  transform: translateY(-50%);
+  /* True center of the *whole* panel box (heading + body + level dots together), not anchored
+     to the heading with the rest growing downward from it — top:50%/translateY(-50%) centers
+     the box as one unit regardless of how tall its content gets, then the extra -64px nudges
+     that center up a bit further. max-height + overflow-y is the backstop for a skill whose
+     body text runs long enough to threaten .sideBySide's hard height cap (no page scroll on
+     this tier — see below): it scrolls within the panel instead of quietly clipping under it. */
+  top: 50%;
+  transform: translateY(calc(-50% - 64px));
   width: 320px;
+  max-height: calc(100dvh - 120px);
+  overflow-y: auto;
 }
 
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {

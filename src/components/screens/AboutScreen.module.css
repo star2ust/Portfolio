@@ -129,7 +129,9 @@
     padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) var(--page-gutter) 40px;
   }
   .portraitWrap {
-    grid-column: 8 / 13;
+    /* 2 columns (10–11), leaving column 12 as a deliberate blank margin before the true edge —
+       not the standard page-gutter alone, an extra full column beyond it. */
+    grid-column: 10 / 12;
     order: 2;
     width: auto;
     aspect-ratio: auto;
@@ -143,6 +145,14 @@
     justify-content: center;
     overflow-y: auto;
     min-height: 0;
+  }
+  /* Pins just the standing logo mark to the bottom of the column instead of it sitting wherever
+     the centered text group's natural end lands — an auto margin absorbs all the leftover space
+     above it, which (since auto margins take priority over justify-content entirely once any
+     exist on the main axis) also settles the text group itself against the top instead of
+     center — the usual "heading starts near the top, mark anchored at the bottom" shape. */
+  .footerLogo {
+    margin-top: auto;
   }
   .bodyCols {
     display: grid;

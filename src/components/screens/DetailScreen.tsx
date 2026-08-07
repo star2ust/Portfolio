@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 import { MediaPlaceholder } from "@/components/media/MediaPlaceholder";
 import { MediaGallery } from "@/components/media/MediaGallery";
@@ -6,7 +7,6 @@ import { ProjectMeta } from "@/components/media/ProjectMeta";
 import { PrevNextLink } from "@/components/navigation/PrevNextLink";
 import { Appear } from "@/motion/Appear";
 import { GrowRule } from "@/motion/GrowRule";
-import { FlipImage } from "@/motion/FlipImage";
 import type { Project } from "@/lib/content";
 import styles from "./DetailScreen.module.css";
 
@@ -28,12 +28,10 @@ export interface DetailScreenProps {
  *  not the page's). The media column sits beside the text (image + a narrow video/slider rail),
  *  not stacked under it.
  *
- *  The image itself isn't wrapped in Appear (matching the source, which only conditionally hides
- *  it — `opacity: flipping ? 0 : 1` — no fade-in of its own): FlipImage (src/motion/FlipImage)
- *  owns its visibility instead, flying in from the clicked grid card's position when that rect
- *  is available (see src/motion/flip.ts) and just rendering in place otherwise (direct link,
- *  refresh, back/forward). The footer mark is intentionally omitted here, same as the source —
- *  it would sit over the "Предыдущий" link.
+ *  The image fades in with the rest of the media column (a plain Appear, no other motion) —
+ *  the source's own FLIP hand-off, flying the clicked grid card's image into this slot, was
+ *  tried and then deliberately dropped in favor of this simpler fade, by request. The footer
+ *  mark is intentionally omitted here, same as the source — it would sit over "Предыдущий".
  *
  *  The video/slider rail: the source bundle itself ships these as "labelled placeholders" —
  *  project/ui_kits/portfolio/README.md calls them "deliberately unfinished, as in the source."
@@ -46,17 +44,17 @@ export function DetailScreen({ project, prev, next }: DetailScreenProps) {
       <SiteChrome icon="close" backHref="/work" menu={false} />
       <div className={styles.layout}>
         <div className={styles.contentRow}>
-          <div className={styles.mediaCol}>
+          <Appear delay={0} from="up" className={styles.mediaCol}>
             <div className={styles.imageWrap}>
-              <FlipImage
-                slug={project.slug}
+              <Image
                 src={project.image}
                 alt={project.title}
+                fill
                 sizes="(max-width: 1113px) 100vw, 50vw"
                 className={styles.image}
               />
             </div>
-            <Appear delay={420} className={styles.mediaRail}>
+            <div className={styles.mediaRail}>
               {project.vimeoUrl ? (
                 <VideoEmbed vimeoUrl={project.vimeoUrl} title={`${project.title} — видео`} className={styles.videoSlot} />
               ) : (
@@ -67,8 +65,8 @@ export function DetailScreen({ project, prev, next }: DetailScreenProps) {
               ) : (
                 <MediaPlaceholder kind="image" label="Слайдер" className={styles.sliderSlot} />
               )}
-            </Appear>
-          </div>
+            </div>
+          </Appear>
 
           <div className={styles.textCol}>
             <Appear delay={60}>

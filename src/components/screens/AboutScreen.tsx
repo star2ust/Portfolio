@@ -68,7 +68,7 @@ export function AboutScreen({ settings }: AboutScreenProps) {
               </div>
             </div>
           </Appear>
-          <FooterLogo />
+          <FooterLogo className={styles.footerLogo} />
         </div>
       </div>
     </main>

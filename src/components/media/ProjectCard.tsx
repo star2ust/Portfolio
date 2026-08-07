@@ -1,7 +1,7 @@
 import type { CSSProperties, MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { storeFlipRect } from "@/motion/flip";
+import { markReturningToWorkInstant } from "@/motion/workReturnFlag";
 import styles from "./ProjectCard.module.css";
 
 export interface ProjectCardProps {
@@ -16,22 +16,12 @@ export interface ProjectCardProps {
 
 /** Work-grid tile: image, uppercase caption, black hairline, tech and year. */
 export function ProjectCard({ href, title, tech, year, image, priority, style }: ProjectCardProps) {
-  // §7's FLIP hand-off starts here: the card's own image sets off toward the detail page's slot,
-  // so the rect that matters is this image's, captured at the moment of the click — before
-  // RouteTransition's cover animation plays and the grid unmounts. See src/motion/flip.ts and
-  // FlipImage (the detail page's half of the same hand-off).
+  // Every click here is a trip into a project detail page — arms the flag so that when the
+  // visitor closes back out to /work, WorkPhraseAndGrid skips its intro and shows the grid
+  // straight away instead of replaying the word-by-word phrase (see workReturnFlag.ts).
   const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    // Not an e.defaultPrevented guard: RouteTransition's own document-capture click handler
-    // (see src/motion/RouteTransition.tsx) already calls preventDefault() on every internal
-    // link click before this bubble-phase handler ever runs — checking that flag here would
-    // make this a no-op on literally every real click. Rect-capture doesn't navigate anything
-    // itself, so whether the default was already prevented is irrelevant to it.
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const img = e.currentTarget.querySelector("img");
-    const slug = href.split("/").filter(Boolean).pop();
-    if (!img || !slug) return;
-    const rect = img.getBoundingClientRect();
-    storeFlipRect(slug, { left: rect.left, top: rect.top, width: rect.width, height: rect.height });
+    markReturningToWorkInstant();
   };
   return (
     <Link href={href} className={styles.card} style={style} onClick={onClick}>
