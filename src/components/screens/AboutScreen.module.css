@@ -158,7 +158,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) 0 40px;
+    padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) 0 24px;
     overflow-y: auto;
     min-height: 0;
   }
@@ -179,21 +179,27 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    padding-top: 18px;
     flex-direction: unset;
   }
-  .metaRow { flex-direction: row; }
+  .metaRow { flex-direction: row; padding-top: 24px; }
 }
 
 /* tablet landscape only (not laptop/desktop, which have plenty of headroom): the shared block
-   above's top clearance was ~13px too tall for this band specifically, forcing .copy's own
-   internal scroll even though every group but the footer mark already fits — shave it down.
-   grid-column: widened from 2/8 into the blank column-8 gap that used to sit between the text
-   and the photo (2/9) — by request, this band specifically trades that gap for more text width,
-   which needs less line-wrapping height in exchange. */
+   above's top clearance was too tall for this band specifically, forcing .copy's own internal
+   scroll — shaved down well past the point .copy's content merely fits, on purpose: right at the
+   edge (content height == container height, to the pixel) a real browser's own sub-pixel font
+   rounding can still tip it into a 1-2px scrollable overflow, invisible as *missing* content but
+   still enough for the scrollbar/scroll gesture to exist — which reads as a bug even though
+   nothing is actually cut off. This -28px (not just enough to zero it out) is a real margin, not
+   a knife's edge, so ordinary rendering variance can't reintroduce that. grid-column: widened
+   from 2/8 into the blank column-8 gap that used to sit between the text and the photo (2/9) —
+   by request, this band specifically trades that gap for more text width, which needs less
+   line-wrapping height in exchange. */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
   .copy {
     grid-column: 2 / 9;
-    padding-top: calc(var(--chrome-back-top) + var(--chrome-icon-size) - 8px);
+    padding-top: calc(var(--chrome-back-top) + var(--chrome-icon-size) - 28px);
   }
 }
 
