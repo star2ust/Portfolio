@@ -75,17 +75,22 @@
 .sideBySide .panel {
   position: absolute;
   left: var(--page-gutter);
-  /* True center of the *whole* panel box (heading + body + level dots together), not anchored
-     to the heading with the rest growing downward from it — top:50%/translateY(-50%) centers
-     the box as one unit regardless of how tall its content gets, then the extra -64px nudges
-     that center up a bit further. max-height + overflow-y is the backstop for a skill whose
-     body text runs long enough to threaten .sideBySide's hard height cap (no page scroll on
-     this tier — see below): it scrolls within the panel instead of quietly clipping under it. */
-  top: 50%;
-  transform: translateY(calc(-50% - 160px));
-  width: 320px;
-  max-height: calc(100dvh - 120px);
+  /* Anchored from the top (same chrome-clearance formula About/Detail use for their own
+     content), not vertically centered — the reference has this panel sitting in the upper
+     part of the screen, not mid-page. A skill with a long body just grows further down from
+     this fixed top edge instead; max-height + overflow-y is the backstop once that growth
+     threatens .sideBySide's hard height cap (no page scroll on this tier — see below): it
+     scrolls within the panel instead of quietly clipping under it.
+     overflow-x here too (not just -y): a long, unbroken word (SkillHeading's title is
+     white-space:nowrap) can render wider than the panel — width is sized generously per
+     breakpoint below to fit realistic names without wrapping, but this is the backstop that
+     guarantees no *scrollbar* appears even so; the CSS spec computes overflow-x as "auto" too
+     once overflow-y is non-visible, which is what actually produced the reported scrollbar. */
+  top: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 40px);
+  width: 380px;
+  max-height: calc(100dvh - var(--chrome-back-top) - var(--chrome-icon-size) - 80px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
@@ -97,9 +102,11 @@
 }
 @media (min-width: 1114px) {
   .body { font-size: 14px; }
-  .sideBySide .panel { width: 360px; }
+  /* Wide enough for a long unbroken skill name ("Photogrammetry") at --fs-skill (58px) not to
+     overflow — the previous 360/447px widths were too narrow for that specific word. */
+  .sideBySide .panel { width: 460px; }
 }
 @media (min-width: 1920px) {
   .body { font-size: var(--fs-body); }
-  .sideBySide .panel { width: 447px; left: 40px; }
+  .sideBySide .panel { width: 600px; left: 40px; }
 }

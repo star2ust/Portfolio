@@ -10,12 +10,17 @@ export interface PrimaryNavProps {
   /** the nav label for the current route, e.g. "ГЛАВНАЯ" */
   active?: string;
   tone?: "default" | "invert";
+  /** false scrolls the nav toggle (desktop menu / mobile burger) away with the page instead of
+   *  pinning it to the viewport — Work wants this specifically, so the chrome disappears once
+   *  you scroll past it instead of floating over the grid. The open overlay itself always stays
+   *  position:fixed regardless (it's a full-screen modal, scroll position shouldn't matter). */
+  fixed?: boolean;
 }
 
 /** The site nav — a fixed vertical menu top-right at 768px+, a burger + full-screen overlay
  *  below that. Shared between SiteChrome (content screens) and the Hero, which has no back
  *  button or footer mark but still needs this. */
-export function PrimaryNav({ active, tone = "default" }: PrimaryNavProps) {
+export function PrimaryNav({ active, tone = "default", fixed = true }: PrimaryNavProps) {
   const [open, setOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -36,14 +41,14 @@ export function PrimaryNav({ active, tone = "default" }: PrimaryNavProps) {
 
   return (
     <>
-      <div className={`${styles.navSlot} ${styles.navDesktop}`}>
+      <div className={`${styles.navSlot} ${styles.navDesktop} ${fixed ? "" : styles.scrollsAway}`}>
         <NavMenu items={SITE_NAV} active={active} tone={tone} />
       </div>
 
       <button
         ref={burgerRef}
         type="button"
-        className={styles.burger}
+        className={`${styles.burger} ${fixed ? "" : styles.scrollsAway}`}
         aria-label="меню"
         aria-expanded={open}
         onClick={() => setOpen(true)}

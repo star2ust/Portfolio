@@ -10,3 +10,10 @@
   height: var(--chrome-icon-size);
   z-index: 30;
 }
+
+/* Work wants the back button to scroll away with the page instead of staying pinned — needs a
+   real containing block to scroll away *within* (the requesting screen's own position:relative
+   ancestor, e.g. WorkScreen's .stage). */
+.scrollsAway {
+  position: absolute;
+}

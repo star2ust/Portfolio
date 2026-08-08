@@ -27,6 +27,13 @@
   gap: 5px;
   cursor: pointer;
 }
+
+/* Work wants the toggle to scroll away with the page instead of staying pinned — this needs a
+   real containing block to scroll away *within*, so it only works where an ancestor sets
+   position:relative (WorkScreen's .stage does). */
+.scrollsAway {
+  position: absolute;
+}
 @media (min-width: 768px) {
   .burger {
     display: none;

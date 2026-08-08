@@ -113,8 +113,10 @@
    gutter, per the client's own Figma grid, cross-checked against project/ui_kits/portfolio/
    AboutScreen.jsx's literal numbers at 1920: photo left:1280 width:445 top:0 height:1080 —
    that's exactly 3 columns (9–11: 3×135 + 2×20 = 445) starting at column 9's line, with column
-   12 left as a blank 1-column margin before the true edge, and 2 blank columns (7–8) between it
-   and the 6-column (1–6) text block.
+   12 left as a blank 1-column margin before the true edge. The text block itself is inset a
+   further column from the left edge (column 1 left blank, text spans 2–7), leaving 1 blank
+   column (8) between it and the photo — matches the reference's own left indent, not flush
+   against the page margin.
    .stage is height-capped (no page scroll, matching the source's fixed-canvas feel). The photo
    bleeds the *entire* stage height edge to edge, same as the source's top:0/height:1080 — so
    the chrome-clearance padding lives on .copy alone (not .layout, which the photo also reads),
@@ -142,7 +144,7 @@
     margin: 0;
   }
   .copy {
-    grid-column: 1 / 7;
+    grid-column: 2 / 8;
     order: 1;
     margin: 0;
     max-width: none;
