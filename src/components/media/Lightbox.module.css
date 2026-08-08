@@ -1,0 +1,76 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 220ms var(--ease);
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.closeBtn {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 2;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 72px 64px;
+}
+.image {
+  object-fit: contain;
+}
+
+.arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #fff;
+  opacity: 0.75;
+  transition: opacity var(--dur) var(--ease);
+}
+.arrow:hover {
+  opacity: 1;
+}
+.arrow svg path {
+  stroke: currentColor;
+}
+.arrowLeft {
+  left: 12px;
+}
+.arrowRight {
+  right: 12px;
+}
+
+.count {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  font-family: var(--font-core);
+  font-size: 12px;
+  letter-spacing: var(--ls-wide);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+@media (max-width: 767px) {
+  .stage { padding: 56px 16px; }
+  .arrow { width: 38px; height: 38px; }
+  .arrowLeft { left: 4px; }
+  .arrowRight { right: 4px; }
+}

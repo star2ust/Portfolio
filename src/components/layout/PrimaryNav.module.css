@@ -67,10 +67,17 @@
   position: fixed;
   left: 20px;
   top: 22px;
+  /* .overlayNav below is a flex container spanning the full screen (inset:0) — even though its
+     *content* is centered, the box itself still occupies the whole viewport and, being later in
+     DOM order with no z-index of its own, painted on top of this button and silently ate every
+     tap on it (confirmed: the close button never actually closed the menu on touch devices).
+     An explicit stacking order fixes it regardless of DOM order. */
+  z-index: 2;
 }
 .overlayNav {
   position: absolute;
   inset: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;

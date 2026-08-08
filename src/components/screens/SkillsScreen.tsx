@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SiteChrome } from "@/components/layout/SiteChrome";
-import { FooterLogo } from "@/components/layout/FooterLogo";
 import { SkillGraph } from "@/components/graphics/SkillGraph";
 import { SkillHeading } from "@/components/typography/SkillHeading";
 import { LevelDots } from "@/components/graphics/LevelDots";
@@ -148,8 +147,6 @@ export function SkillsScreen({ skills, emptyState, locale }: SkillsScreenProps) 
             <p className={styles.empty}>{emptyState}</p>
           )}
         </div>
-
-        <FooterLogo className={styles.footerLogo} />
       </div>
     </main>
   );

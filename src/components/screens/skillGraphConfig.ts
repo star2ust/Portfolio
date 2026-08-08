@@ -53,7 +53,12 @@ export function scaleSkillGraphConfig(
   if (base.panel === "below" || !measuredHeight) {
     const margin = base.panel === "below" ? 36 : 0;
     const usableWidth = Math.max(measuredWidth - margin * 2, 1);
-    const scale = usableWidth / base.width;
+    // Capped at 1: this scale only needs to shrink the graph down for a container narrower than
+    // the anchor, not grow it beyond the anchor's own designed dot/hub sizes — left uncapped, a
+    // tablet-portrait viewport toward the wide end of that band (up to 1113px, well past the
+    // 768px anchor) scaled the dots/hub up to ~1.4x their designed size, which read as the graph
+    // "suddenly getting a lot bigger" rather than smoothly filling more space.
+    const scale = Math.min(usableWidth / base.width, 1);
     const centerX = base.panel === "below" ? measuredWidth / 2 : base.centerX * scale;
     return {
       ...base,

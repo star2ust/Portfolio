@@ -24,6 +24,14 @@ export function localeHref(locale: Locale, path: string): string {
   return `/${locale}${path === "/" ? "" : path}`;
 }
 
+/** Rewrites an already-prefixed pathname (from usePathname()) onto a different locale, keeping
+ *  everything after the locale segment as-is — used by the language switcher so flipping
+ *  language mid-project-detail-page stays on that same project instead of bouncing home. */
+export function swapLocalePath(pathname: string, locale: Locale): string {
+  const rest = pathname.replace(/^\/(ru|en)/, "");
+  return `/${locale}${rest}`;
+}
+
 export interface NavItem {
   label: string;
   href: string;
@@ -35,7 +43,7 @@ export interface Dictionary {
   prevNext: { prev: string; next: string; projectWord: string };
   projectMeta: { tasks: string; result: string };
   detail: { video: string; slider: string; videoTitleSuffix: string };
-  gallery: { prevPhoto: string; nextPhoto: string; photoSuffix: string };
+  gallery: { prevPhoto: string; nextPhoto: string; photoSuffix: string; openPhoto: string };
   skillGraph: { ariaLabel: string };
   meta: {
     home: string;
@@ -56,7 +64,7 @@ const ru: Dictionary = {
   prevNext: { prev: "Предыдущий", next: "Следующий", projectWord: "проект" },
   projectMeta: { tasks: "Задачи:", result: "Результат:" },
   detail: { video: "Видео", slider: "Слайдер", videoTitleSuffix: "видео" },
-  gallery: { prevPhoto: "Предыдущее фото", nextPhoto: "Следующее фото", photoSuffix: "фото" },
+  gallery: { prevPhoto: "Предыдущее фото", nextPhoto: "Следующее фото", photoSuffix: "фото", openPhoto: "Открыть фото крупнее" },
   skillGraph: { ariaLabel: "Граф навыков — выберите узел, чтобы увидеть описание" },
   meta: {
     home: "Хабаров Егор — Interactive Developer",
@@ -78,7 +86,7 @@ const en: Dictionary = {
   prevNext: { prev: "Previous", next: "Next", projectWord: "project" },
   projectMeta: { tasks: "Tasks:", result: "Result:" },
   detail: { video: "Video", slider: "Slider", videoTitleSuffix: "video" },
-  gallery: { prevPhoto: "Previous photo", nextPhoto: "Next photo", photoSuffix: "photo" },
+  gallery: { prevPhoto: "Previous photo", nextPhoto: "Next photo", photoSuffix: "photo", openPhoto: "Open photo full-size" },
   skillGraph: { ariaLabel: "Skills graph — select a node to see the description" },
   meta: {
     home: "Egor Khabarov — Interactive Developer",

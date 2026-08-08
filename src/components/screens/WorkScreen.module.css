@@ -8,18 +8,19 @@
   padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) var(--page-gutter) 60px;
 }
 
-/* >=768px: the top-right chrome is the full 5-item NavMenu here (mobile's compact burger
-   button doesn't need this) — its own stack is taller than the back button /
-   chrome-back-top+chrome-icon-size math above accounts for, so the grid's first row was
-   climbing up underneath its text. Clears the nav's real height at each tier instead. */
+/* >=768px: the top-right chrome is the full NavMenu list here (mobile's compact burger button
+   doesn't need this) — its own stack (site nav + the RU/EN language rows, folded into the same
+   list) is taller than the back button / chrome-back-top+chrome-icon-size math above accounts
+   for, so the grid's first row was climbing up underneath its text. Clears the nav's real
+   height at each tier instead (measured directly, not estimated). */
 @media (min-width: 768px) {
-  .layout { padding-top: calc(var(--chrome-nav-top) + 155px); }
+  .layout { padding-top: calc(var(--chrome-nav-top) + 190px); }
 }
 @media (min-width: 1114px) {
-  .layout { padding-top: calc(var(--chrome-nav-top) + 175px); }
+  .layout { padding-top: calc(var(--chrome-nav-top) + 210px); }
 }
 @media (min-width: 1920px) {
-  .layout { padding-top: calc(var(--chrome-nav-top) + 195px); }
+  .layout { padding-top: calc(var(--chrome-nav-top) + 230px); }
 }
 
 .grid {

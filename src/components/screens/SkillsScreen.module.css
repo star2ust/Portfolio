@@ -44,12 +44,6 @@
   text-align: center;
 }
 
-.footerLogo {
-  position: absolute;
-  left: var(--page-gutter);
-  bottom: 24px;
-}
-
 /* ---------- stacked (mobile, tablet-portrait): panel below the graph, in flow — this tier is
    allowed to scroll normally (a real page with a graph above and however much skill copy below
    doesn't fit a "no scroll, ever" rule the way the side-by-side tier's fixed overlay does). ---------- */
@@ -104,7 +98,9 @@
 
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
   .body { font-size: 14px; }
-  .stacked .panel { max-width: 672px; margin: 0 auto; }
+  /* Raised off its default 24px top padding — the panel read as sitting too low/far from the
+     graph above it at this width. */
+  .stacked .panel { max-width: 672px; margin: -16px auto 0; padding-top: 8px; }
 }
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
   .body { font-size: 13px; }

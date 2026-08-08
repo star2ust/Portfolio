@@ -172,6 +172,15 @@
   .metaRow { flex-direction: row; }
 }
 
+/* tablet landscape only (not laptop/desktop, which have plenty of headroom): the shared block
+   above's top clearance was ~13px too tall for this band specifically, forcing .copy's own
+   internal scroll even though every group but the footer mark already fits — shave it down. */
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
+  .copy {
+    padding-top: calc(var(--chrome-back-top) + var(--chrome-icon-size) - 8px);
+  }
+}
+
 @media (min-width: 1114px) {
   .title { font-size: 36px; }
   .lede { font-size: 20px; }

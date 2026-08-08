@@ -87,5 +87,6 @@
    the overlay's own type scale is a separate, non-fluid pair of tokens. */
 :root{
   --fs-menu-overlay: 18px;
-  --ls-menu-overlay: 15px;
+  --ls-menu-overlay: 1.5px; /* was 15px — a decimal-point typo that stretched every overlay
+    word across nearly the full screen width with huge gaps between letters */
 }

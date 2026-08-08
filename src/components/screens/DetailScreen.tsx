@@ -1,10 +1,7 @@
-import Image from "next/image";
 import { SiteChrome } from "@/components/layout/SiteChrome";
-import { MediaPlaceholder } from "@/components/media/MediaPlaceholder";
-import { MediaGallery } from "@/components/media/MediaGallery";
-import { VideoEmbed } from "@/components/media/VideoEmbed";
 import { ProjectMeta } from "@/components/media/ProjectMeta";
 import { PrevNextLink } from "@/components/navigation/PrevNextLink";
+import { DetailMedia } from "./DetailMedia";
 import { Appear } from "@/motion/Appear";
 import { GrowRule } from "@/motion/GrowRule";
 import { getDictionary, localeHref, type Locale } from "@/lib/i18n";
@@ -28,7 +25,9 @@ export interface DetailScreenProps {
  *  source's fixed 1080-tall canvas — by fixing .stage's height and letting only .textCol scroll
  *  internally if a project's description/tasks/result run long (.textCol's own overflow-y,
  *  not the page's). The media column sits beside the text (image + a narrow video/slider rail),
- *  not stacked under it.
+ *  not stacked under it — see DetailMedia, its own client island (it needs state for the
+ *  click-to-enlarge Lightbox, so it's split out rather than making this whole screen a client
+ *  component).
  *
  *  The image fades in with the rest of the media column (a plain Appear, no other motion) —
  *  the source's own FLIP hand-off, flying the clicked grid card's image into this slot, was
@@ -47,33 +46,7 @@ export function DetailScreen({ project, prev, next, locale }: DetailScreenProps)
       <SiteChrome locale={locale} icon="close" backHref="/work" menu={false} />
       <div className={styles.layout}>
         <div className={styles.contentRow}>
-          <Appear delay={0} from="up" className={styles.mediaCol}>
-            <div className={styles.imageWrap}>
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                sizes="(max-width: 1113px) 100vw, 50vw"
-                className={styles.image}
-              />
-            </div>
-            <div className={styles.mediaRail}>
-              {project.vimeoUrl ? (
-                <VideoEmbed
-                  vimeoUrl={project.vimeoUrl}
-                  title={`${project.title} — ${dict.detail.videoTitleSuffix}`}
-                  className={styles.videoSlot}
-                />
-              ) : (
-                <MediaPlaceholder kind="video" label={dict.detail.video} className={styles.videoSlot} />
-              )}
-              {project.gallery && project.gallery.length > 0 ? (
-                <MediaGallery images={project.gallery} alt={project.title} locale={locale} className={styles.sliderSlot} />
-              ) : (
-                <MediaPlaceholder kind="image" label={dict.detail.slider} className={styles.sliderSlot} />
-              )}
-            </div>
-          </Appear>
+          <DetailMedia project={project} locale={locale} />
 
           <div className={styles.textCol}>
             <Appear delay={60}>

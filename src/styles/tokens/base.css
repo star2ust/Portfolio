@@ -2,6 +2,10 @@
 :root{ color-scheme: light; }
 *, *::before, *::after{ box-sizing: border-box; }
 html{ -webkit-text-size-adjust: 100%; }
+/* Kills the default blue/grey flash Android/iOS paint on every tap of a link or button — this
+   system already has its own :focus-visible ring and :hover/:active states, so the browser's
+   own highlight is just visual noise on top of them, not present on comparable sites. */
+a, button, [role="button"]{ -webkit-tap-highlight-color: transparent; }
 body{
   margin:0;
   background:var(--surface-page);

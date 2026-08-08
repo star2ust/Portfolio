@@ -46,3 +46,13 @@
 .link:hover .thumb {
   opacity: 1;
 }
+
+/* Mobile: the 135px desktop size is too large for two of these side by side on a ~320-350px
+   pager row — scale the whole thing down (width, arrow shaft box, thumbnail) together. The
+   <svg width="135" height="9"> in PrevNextLink.tsx keeps that viewBox, so overriding its box
+   size here still scales the drawn arrow proportionally instead of clipping it. */
+@media (max-width: 767px) {
+  .link { width: 92px; }
+  .shaft { width: 92px; height: 6px; }
+  .thumbWrap { width: 92px; height: 65px; margin-top: 8px; }
+}

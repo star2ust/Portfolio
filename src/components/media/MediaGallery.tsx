@@ -10,13 +10,17 @@ export interface MediaGalleryProps {
   alt: string;
   locale: Locale;
   className?: string;
+  /** Opens the current slide (its index within `images`) in the full-screen Lightbox instead of
+   *  this inline strip — the inline slider is too small to make out detail on a phone, which is
+   *  the specific case this exists for. Omit to leave the frame non-interactive. */
+  onPhotoClick?: (index: number) => void;
 }
 
 /** A small image slider for the detail page's "Слайдер" slot — real content when the project has
  *  more than one gallery photo in Sanity, otherwise the caller falls back to a single static
  *  image or the flat placeholder. Arrows reuse the thin-shaft line motif from PrevNextLink
  *  rather than the raster icon set, since this is inline chrome, not a page-level control. */
-export function MediaGallery({ images, alt, locale, className }: MediaGalleryProps) {
+export function MediaGallery({ images, alt, locale, className, onPhotoClick }: MediaGalleryProps) {
   const [index, setIndex] = useState(0);
   const dict = getDictionary(locale);
   if (images.length === 0) return null;
@@ -25,7 +29,24 @@ export function MediaGallery({ images, alt, locale, className }: MediaGalleryPro
 
   return (
     <div className={`${styles.wrap} ${className ?? ""}`}>
-      <div className={styles.frame}>
+      <div
+        className={styles.frame}
+        role={onPhotoClick ? "button" : undefined}
+        tabIndex={onPhotoClick ? 0 : undefined}
+        aria-label={onPhotoClick ? dict.gallery.openPhoto : undefined}
+        onClick={onPhotoClick ? () => onPhotoClick(index) : undefined}
+        onKeyDown={
+          onPhotoClick
+            ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onPhotoClick(index);
+                }
+              }
+            : undefined
+        }
+        style={onPhotoClick ? { cursor: "pointer" } : undefined}
+      >
         {images.map((src, i) => (
           <Image
             key={src}

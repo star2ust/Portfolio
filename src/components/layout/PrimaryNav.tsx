@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { IconButton } from "@/components/core/IconButton";
 import { NavMenu } from "@/components/navigation/NavMenu";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { getDictionary, getSiteNav, type Locale } from "@/lib/i18n";
+import { getDictionary, getSiteNav, swapLocalePath, LOCALES, type Locale } from "@/lib/i18n";
 import styles from "./PrimaryNav.module.css";
 
 export interface PrimaryNavProps {
@@ -29,6 +29,7 @@ export function PrimaryNav({ locale, active, tone = "default", fixed = true }: P
   const closeRef = useRef<HTMLButtonElement>(null);
   const dict = getDictionary(locale);
   const navItems = getSiteNav(locale);
+  const pathname = usePathname() ?? `/${locale}`;
 
   // Move focus into the overlay on open, back to the burger on close (not just visually toggle)
   // — keyboard users shouldn't lose their place. Escape closes it too, the standard dialog convention.
@@ -48,7 +49,6 @@ export function PrimaryNav({ locale, active, tone = "default", fixed = true }: P
     <>
       <div className={`${styles.navSlot} ${styles.navDesktop} ${fixed ? "" : styles.scrollsAway}`}>
         <NavMenu locale={locale} items={navItems} active={active} tone={tone} />
-        <LanguageSwitcher locale={locale} tone={tone} />
       </div>
 
       <button
@@ -86,7 +86,19 @@ export function PrimaryNav({ locale, active, tone = "default", fixed = true }: P
               {item.label}
             </Link>
           ))}
-          <LanguageSwitcher locale={locale} overlay />
+          {/* Same .overlayItem class as the site-nav links above — the language rows read as a
+              natural continuation of the same list instead of a visually distinct control. */}
+          {LOCALES.map((l) => (
+            <Link
+              key={l}
+              href={swapLocalePath(pathname, l)}
+              className={`${styles.overlayItem} ${l === locale ? styles.overlayItemActive : ""}`}
+              aria-label={dict.languageSwitcher.switchTo[l]}
+              onClick={() => setOpen(false)}
+            >
+              {l.toUpperCase()}
+            </Link>
+          ))}
         </nav>
       </div>
     </>

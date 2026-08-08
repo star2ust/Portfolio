@@ -2,7 +2,8 @@
 
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import { getDictionary, getSiteNav, type Locale, type NavItem } from "@/lib/i18n";
+import { usePathname } from "next/navigation";
+import { getDictionary, getSiteNav, swapLocalePath, LOCALES, type Locale, type NavItem } from "@/lib/i18n";
 import styles from "./NavMenu.module.css";
 
 export type { NavItem };
@@ -18,10 +19,14 @@ export interface NavMenuProps {
   className?: string;
 }
 
-/** Right-aligned vertical site menu — pinned top-right on every content screen. */
+/** Right-aligned vertical site menu — pinned top-right on every content screen. The RU/EN
+ *  language rows are rendered as two more entries in this exact same list (same Link, same
+ *  .item class, same flex column) rather than as a separate element nearby, by request — the
+ *  simplest way to guarantee identical font/spacing/indent is to literally be the same list. */
 export function NavMenu({ locale, items, active, tone = "default", style, className }: NavMenuProps) {
   const dict = getDictionary(locale);
   const navItems = items ?? getSiteNav(locale);
+  const pathname = usePathname() ?? `/${locale}`;
   return (
     <nav
       aria-label={dict.aria.primaryNav}
@@ -36,6 +41,17 @@ export function NavMenu({ locale, items, active, tone = "default", style, classN
           aria-current={item.label === active ? "page" : undefined}
         >
           {item.label}
+        </Link>
+      ))}
+      {LOCALES.map((l) => (
+        <Link
+          key={l}
+          href={swapLocalePath(pathname, l)}
+          className={styles.item}
+          aria-current={l === locale ? "page" : undefined}
+          aria-label={dict.languageSwitcher.switchTo[l]}
+        >
+          {l.toUpperCase()}
         </Link>
       ))}
     </nav>

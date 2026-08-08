@@ -22,17 +22,25 @@
   transition: opacity 420ms var(--ease);
 }
 /* tablet portrait: the video is contained rather than cropped, so the frame reads at
-   portrait proportions (project/ui_kits/portfolio-tablet/TabletHeroScreen.jsx) */
+   portrait proportions (project/ui_kits/portfolio-tablet/TabletHeroScreen.jsx). Top pushed down
+   (bottom stays flush with the viewport edge, same as before — only the top inset changes, so
+   the band's height just shrinks to fit) to clear the identity lockup above it instead of
+   sitting flush under the very top edge. */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
   .video {
     object-fit: contain;
   }
+  .videoWrap {
+    top: 150px;
+  }
 }
-/* mobile: a fixed-height band (70% of the 360×800 anchor) rather than full-bleed */
+/* mobile: a band starting below the identity lockup instead of flush at the top, ending at the
+   same 70%-of-viewport mark as before (bottom:30% == the old inset:0/height:70% combination's
+   bottom edge) — so only the top moves, the specs strip's clearance at the bottom is untouched. */
 @media (max-width: 767px) {
   .videoWrap {
-    inset: 0 0 auto 0;
-    height: 70%;
+    inset: 130px 0 30% 0;
+    height: auto;
   }
 }
 

@@ -30,3 +30,9 @@
 .filled {
   background: var(--dot-filled);
 }
+/* Half-filled dot for a .5 level (e.g. 3.5/5) — a hard-stop gradient reads as a clean split
+   right down the middle of the circle instead of a solid fill; background-clip follows the
+   dot's own border-radius, so this still renders as a half-moon, not a square. */
+.half {
+  background: linear-gradient(90deg, var(--dot-filled) 50%, transparent 50%);
+}
