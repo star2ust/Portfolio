@@ -133,14 +133,14 @@ export function SkillsScreen({ skills, emptyState, locale }: SkillsScreenProps) 
                   <p className={styles.body}>{displayed.body}</p>
                 </Appear>
                 <Appear delay={320}>
-                  <LevelDots level={displayed.level} style={{ paddingTop: 40 }} />
+                  <LevelDots level={displayed.level} label={dict.levelDots.label} style={{ paddingTop: 40 }} />
                 </Appear>
               </>
             ) : (
               <>
                 <SkillHeading mark={false}>{displayed.name}</SkillHeading>
                 <p className={styles.body}>{displayed.body}</p>
-                <LevelDots level={displayed.level} style={{ paddingTop: 40 }} />
+                <LevelDots level={displayed.level} label={dict.levelDots.label} style={{ paddingTop: 40 }} />
               </>
             )
           ) : (

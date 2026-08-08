@@ -35,3 +35,37 @@
 .item[aria-current="page"] {
   color: var(--accent);
 }
+
+/* Desktop / tablet-landscape only: the 8px vertical padding above reads a little loose at these
+   widths specifically — tighter here, untouched on mobile/tablet-portrait (that padding is also
+   this list's WCAG 24x24 tap-target floor there, which still matters on a touch device). */
+@media (min-width: 768px) and (orientation: landscape), (min-width: 1114px) {
+  .item {
+    padding: 5px 10px;
+  }
+}
+
+/* RU/EN share this one row instead of being two separate list entries — combined with .item
+   above (same padding/font/etc as every other row), .langRow just lays its two Link children
+   out in a line instead of stacking them. */
+.langRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.langPair {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.langDivider {
+  opacity: 0.4;
+}
+.langLink {
+  color: inherit;
+  transition: color var(--dur) var(--ease);
+}
+.langLink:hover,
+.langLink[aria-current="page"] {
+  color: var(--accent);
+}

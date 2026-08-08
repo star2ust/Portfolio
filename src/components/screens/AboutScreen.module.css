@@ -33,6 +33,13 @@
   width: 100%;
 }
 
+/* Order 3: stays after .portraitWrap/.copy in the mobile/tablet-portrait flex column (an
+   unset order defaults to 0, which would jump it in front of both). The grid breakpoint below
+   takes it out of flow entirely (position:absolute), where order no longer applies. */
+.footerLogo {
+  order: 3;
+}
+
 .title {
   margin: 0;
   text-align: center;
@@ -155,13 +162,18 @@
     overflow-y: auto;
     min-height: 0;
   }
-  /* Pins just the standing logo mark to the bottom of the column instead of it sitting wherever
-     the centered text group's natural end lands — an auto margin absorbs all the leftover space
-     above it, which (since auto margins take priority over justify-content entirely once any
-     exist on the main axis) also settles the text group itself against the top instead of
-     center — the usual "heading starts near the top, mark anchored at the bottom" shape. */
+  /* Pulled out of .copy's own flex column entirely (it used to live there with a margin-top:auto
+     push) — .copy's height is exactly the content it needs to fit without scrolling now, and a
+     centered flex column with content taller than its container clips unreachably at the *top*
+     when it overflows (the visible symptom: the title disappeared, with no way to scroll up to
+     it) — the standing logo mark was consistently the extra height tipping it into that state.
+     Positioned directly against .stage (the nearest positioned ancestor — .layout itself isn't
+     positioned) instead, with the same left/bottom offsets every other screen's own footer mark
+     uses, independent of whatever .copy's content needs. */
   .footerLogo {
-    margin-top: auto;
+    position: absolute;
+    left: var(--page-gutter);
+    bottom: 24px;
   }
   .bodyCols {
     display: grid;
@@ -174,9 +186,13 @@
 
 /* tablet landscape only (not laptop/desktop, which have plenty of headroom): the shared block
    above's top clearance was ~13px too tall for this band specifically, forcing .copy's own
-   internal scroll even though every group but the footer mark already fits — shave it down. */
+   internal scroll even though every group but the footer mark already fits — shave it down.
+   grid-column: widened from 2/8 into the blank column-8 gap that used to sit between the text
+   and the photo (2/9) — by request, this band specifically trades that gap for more text width,
+   which needs less line-wrapping height in exchange. */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {
   .copy {
+    grid-column: 2 / 9;
     padding-top: calc(var(--chrome-back-top) + var(--chrome-icon-size) - 8px);
   }
 }

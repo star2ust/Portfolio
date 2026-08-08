@@ -86,19 +86,28 @@ export function PrimaryNav({ locale, active, tone = "default", fixed = true }: P
               {item.label}
             </Link>
           ))}
-          {/* Same .overlayItem class as the site-nav links above — the language rows read as a
-              natural continuation of the same list instead of a visually distinct control. */}
-          {LOCALES.map((l) => (
-            <Link
-              key={l}
-              href={swapLocalePath(pathname, l)}
-              className={`${styles.overlayItem} ${l === locale ? styles.overlayItemActive : ""}`}
-              aria-label={dict.languageSwitcher.switchTo[l]}
-              onClick={() => setOpen(false)}
-            >
-              {l.toUpperCase()}
-            </Link>
-          ))}
+          {/* Same .overlayItem class as the site-nav links above, one row for both languages
+              ("RU / EN") instead of two separate rows — reads as a natural continuation of the
+              same list instead of a visually distinct control. */}
+          <div className={`${styles.overlayItem} ${styles.overlayLangRow}`}>
+            {LOCALES.map((l, i) => (
+              <span key={l} className={styles.overlayLangPair}>
+                {i > 0 ? (
+                  <span className={styles.overlayLangDivider} aria-hidden="true">
+                    /
+                  </span>
+                ) : null}
+                <Link
+                  href={swapLocalePath(pathname, l)}
+                  className={l === locale ? styles.overlayItemActive : undefined}
+                  aria-label={dict.languageSwitcher.switchTo[l]}
+                  onClick={() => setOpen(false)}
+                >
+                  {l.toUpperCase()}
+                </Link>
+              </span>
+            ))}
+          </div>
         </nav>
       </div>
     </>

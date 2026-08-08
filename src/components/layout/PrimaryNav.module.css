@@ -100,3 +100,22 @@
 .overlayItemActive {
   color: var(--accent);
 }
+
+/* RU/EN share this one row instead of two separate rows — .overlayLangRow lays its two Link
+   children out in a line; they don't match .overlayItem themselves (that class is on this row's
+   wrapping div now, not on them), so they inherit its color explicitly instead of falling back
+   to the global `a{color}` reset. */
+.overlayLangRow {
+  gap: 6px;
+}
+.overlayLangPair {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.overlayLangDivider {
+  opacity: 0.5;
+}
+.overlayLangRow a {
+  color: inherit;
+}

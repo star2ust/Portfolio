@@ -20,9 +20,9 @@ export interface NavMenuProps {
 }
 
 /** Right-aligned vertical site menu — pinned top-right on every content screen. The RU/EN
- *  language rows are rendered as two more entries in this exact same list (same Link, same
- *  .item class, same flex column) rather than as a separate element nearby, by request — the
- *  simplest way to guarantee identical font/spacing/indent is to literally be the same list. */
+ *  language switcher is one more row in this exact same list (same .item class, same flex
+ *  column) rather than a separate element nearby, by request — both languages share that one
+ *  row ("RU / EN"), not two separate rows, so it reads as a single menu entry. */
 export function NavMenu({ locale, items, active, tone = "default", style, className }: NavMenuProps) {
   const dict = getDictionary(locale);
   const navItems = items ?? getSiteNav(locale);
@@ -43,17 +43,25 @@ export function NavMenu({ locale, items, active, tone = "default", style, classN
           {item.label}
         </Link>
       ))}
-      {LOCALES.map((l) => (
-        <Link
-          key={l}
-          href={swapLocalePath(pathname, l)}
-          className={styles.item}
-          aria-current={l === locale ? "page" : undefined}
-          aria-label={dict.languageSwitcher.switchTo[l]}
-        >
-          {l.toUpperCase()}
-        </Link>
-      ))}
+      <div className={`${styles.item} ${styles.langRow}`}>
+        {LOCALES.map((l, i) => (
+          <span key={l} className={styles.langPair}>
+            {i > 0 ? (
+              <span className={styles.langDivider} aria-hidden="true">
+                /
+              </span>
+            ) : null}
+            <Link
+              href={swapLocalePath(pathname, l)}
+              className={styles.langLink}
+              aria-current={l === locale ? "page" : undefined}
+              aria-label={dict.languageSwitcher.switchTo[l]}
+            >
+              {l.toUpperCase()}
+            </Link>
+          </span>
+        ))}
+      </div>
     </nav>
   );
 }

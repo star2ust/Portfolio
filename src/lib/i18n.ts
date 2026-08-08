@@ -45,6 +45,7 @@ export interface Dictionary {
   detail: { video: string; slider: string; videoTitleSuffix: string };
   gallery: { prevPhoto: string; nextPhoto: string; photoSuffix: string; openPhoto: string };
   skillGraph: { ariaLabel: string };
+  levelDots: { label: string };
   meta: {
     home: string;
     about: string;
@@ -66,6 +67,7 @@ const ru: Dictionary = {
   detail: { video: "Видео", slider: "Слайдер", videoTitleSuffix: "видео" },
   gallery: { prevPhoto: "Предыдущее фото", nextPhoto: "Следующее фото", photoSuffix: "фото", openPhoto: "Открыть фото крупнее" },
   skillGraph: { ariaLabel: "Граф навыков — выберите узел, чтобы увидеть описание" },
+  levelDots: { label: "УРОВЕНЬ" },
   meta: {
     home: "Хабаров Егор — Interactive Developer",
     about: "Обо мне",
@@ -88,6 +90,7 @@ const en: Dictionary = {
   detail: { video: "Video", slider: "Slider", videoTitleSuffix: "video" },
   gallery: { prevPhoto: "Previous photo", nextPhoto: "Next photo", photoSuffix: "photo", openPhoto: "Open photo full-size" },
   skillGraph: { ariaLabel: "Skills graph — select a node to see the description" },
+  levelDots: { label: "LEVEL" },
   meta: {
     home: "Egor Khabarov — Interactive Developer",
     about: "About",
