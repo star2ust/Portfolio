@@ -112,7 +112,7 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
         </div>
 
         <div
-          className={styles.panel}
+          className={`${styles.panel} ${!displayed ? styles.panelEmpty : ""}`}
           style={{
             pointerEvents: displayed ? "auto" : "none",
             opacity: exiting ? 0 : 1,

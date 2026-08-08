@@ -92,6 +92,15 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+/* The idle "click a node" hint isn't the info panel — it reads better a little above true
+   center than pinned up near the chrome, so it gets its own vertical position instead of
+   .panel's usual top-anchored one. Not translateY(-50%) + an offset: SkillsScreen.tsx sets an
+   inline `transform` on this element too (for the deselect slide-out animation), and inline
+   styles always win over a stylesheet rule's same property — calc() on `top` directly instead
+   sidesteps that collision entirely, no transform needed here. */
+.sideBySide .panelEmpty {
+  top: calc(50% - 60px);
+}
 
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
   .body { font-size: 14px; }
