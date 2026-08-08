@@ -7,6 +7,7 @@ import { SkillGraph } from "@/components/graphics/SkillGraph";
 import { SkillHeading } from "@/components/typography/SkillHeading";
 import { LevelDots } from "@/components/graphics/LevelDots";
 import { Appear } from "@/motion/Appear";
+import { getDictionary, type Locale } from "@/lib/i18n";
 import type { Skill } from "@/lib/content";
 import { pickSkillGraphBase, scaleSkillGraphConfig } from "./skillGraphConfig";
 import styles from "./SkillsScreen.module.css";
@@ -14,6 +15,7 @@ import styles from "./SkillsScreen.module.css";
 export interface SkillsScreenProps {
   skills: Skill[];
   emptyState: string;
+  locale: Locale;
 }
 
 type PanelState = "hidden" | "entering" | "shown" | "exiting";
@@ -25,7 +27,8 @@ type PanelState = "hidden" | "entering" | "shown" | "exiting";
  *  straight to a different node swaps the text instantly, no animation; deselecting (clicking
  *  empty space) slides the whole panel out to the right and fades it; selecting again replays
  *  the entrance. */
-export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
+export function SkillsScreen({ skills, emptyState, locale }: SkillsScreenProps) {
+  const dict = getDictionary(locale);
   const [active, setActive] = useState<string | null>(null);
   const [displayed, setDisplayed] = useState<Skill | null>(null);
   const [panelState, setPanelState] = useState<PanelState>("hidden");
@@ -90,7 +93,7 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
 
   return (
     <main className={styles.stage}>
-      <SiteChrome active="НАВЫКИ" />
+      <SiteChrome locale={locale} active={dict.nav.skills} />
       <div className={`${styles.layout} ${panelSide === "below" ? styles.stacked : styles.sideBySide}`}>
         <div ref={containerRef} className={styles.graphWrap}>
           {config ? (
@@ -107,6 +110,7 @@ export function SkillsScreen({ skills, emptyState }: SkillsScreenProps) {
               dot={config.dot}
               hub={config.hub}
               fontSize={config.fontSize}
+              ariaLabel={dict.skillGraph.ariaLabel}
             />
           ) : null}
         </div>

@@ -87,6 +87,11 @@ async function main() {
       tasks: p.tasks,
       result: p.result,
       order: Number(p.index),
+      titleEn: p.titleEn,
+      roleEn: p.roleEn,
+      bodyEn: p.bodyEn,
+      tasksEn: p.tasksEn,
+      resultEn: p.resultEn,
     });
     console.log(`  [${i + 1}/${seed.projects.length}] ${p.slug}`);
   }
@@ -99,6 +104,7 @@ async function main() {
       name: s.name,
       level: s.level,
       body: s.body,
+      bodyEn: s.bodyEn,
     });
   }
 
@@ -120,6 +126,15 @@ async function main() {
     skillsEmptyState: seed.site.skills.emptyState,
     contactTitle: seed.site.contact.title,
     contactRows: seed.site.contact.rows,
+    heroSpecsEn: seed.site.heroSpecsEn,
+    aboutTitleEn: seed.site.about.titleEn,
+    aboutLedeEn: seed.site.about.ledeEn,
+    aboutBody1En: seed.site.about.body1En,
+    aboutBody2En: seed.site.about.body2En,
+    aboutMetaEn: seed.site.about.metaEn,
+    workLedeEn: seed.site.workLedeEn,
+    skillsEmptyStateEn: seed.site.skillsEmptyStateEn,
+    contactTitleEn: seed.site.contactTitleEn,
   });
 
   console.log("\nDone. Open /studio on your site (or https://" + projectId + ".sanity.studio once deployed) to see it.");

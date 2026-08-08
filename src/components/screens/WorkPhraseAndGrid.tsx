@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SectionLede } from "@/components/typography/SectionLede";
 import { ProjectCard } from "@/components/media/ProjectCard";
 import { consumeReturningToWorkInstant } from "@/motion/workReturnFlag";
+import { localeHref, type Locale } from "@/lib/i18n";
 import type { Project } from "@/lib/content";
 import styles from "./WorkPhraseAndGrid.module.css";
 import gridStyles from "./WorkScreen.module.css";
@@ -11,6 +12,7 @@ import gridStyles from "./WorkScreen.module.css";
 export interface WorkPhraseAndGridProps {
   projects: Project[];
   lede: string;
+  locale: Locale;
 }
 
 /** §6 of the motion spec: the lede assembles word by word as the page opens, covering the grid;
@@ -23,7 +25,7 @@ export interface WorkPhraseAndGridProps {
  *  The intro replays on every fresh visit to /work — it only skips straight to the revealed grid
  *  when returning from a project detail page (matches the source's `instant` prop: "returning
  *  from a project: the grid is simply already there"), tracked via workReturnFlag.ts. */
-export function WorkPhraseAndGrid({ projects, lede }: WorkPhraseAndGridProps) {
+export function WorkPhraseAndGrid({ projects, lede, locale }: WorkPhraseAndGridProps) {
   const words = lede.split(" ");
   const [on, setOn] = useState(false);
   const [gone, setGone] = useState(false);
@@ -128,7 +130,7 @@ export function WorkPhraseAndGrid({ projects, lede }: WorkPhraseAndGridProps) {
             }}
           >
             <ProjectCard
-              href={`/work/${p.slug}`}
+              href={localeHref(locale, `/work/${p.slug}`)}
               title={p.title}
               tech={p.tech}
               year={p.year}

@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { IconButton } from "@/components/core/IconButton";
 import { PrimaryNav } from "@/components/layout/PrimaryNav";
+import { getDictionary, localeHref, type Locale } from "@/lib/i18n";
 import styles from "./SiteChrome.module.css";
 
 export interface SiteChromeProps {
+  locale: Locale;
   /** the nav label for the current route, e.g. "ОБО МНЕ" */
   active?: string;
   icon?: "back" | "close";
+  /** unprefixed — e.g. "/" or "/work", never "/ru/work". Localized internally via localeHref(). */
   backHref?: string;
   tone?: "default" | "invert";
   /** the detail screen hides the site nav entirely (source: `Chrome menu={false}`) — closing
@@ -29,17 +32,26 @@ export interface SiteChromeProps {
  * About body text on mobile). Screens render it themselves via <FooterLogo /> at the end of
  * their own content flow instead.
  */
-export function SiteChrome({ active, icon = "back", backHref = "/", tone = "default", menu = true, fixed = true }: SiteChromeProps) {
+export function SiteChrome({
+  locale,
+  active,
+  icon = "back",
+  backHref = "/",
+  tone = "default",
+  menu = true,
+  fixed = true,
+}: SiteChromeProps) {
+  const dict = getDictionary(locale);
   return (
     <>
       <Link
-        href={backHref}
-        aria-label={icon === "close" ? "закрыть" : "назад"}
+        href={localeHref(locale, backHref)}
+        aria-label={icon === "close" ? dict.aria.close : dict.aria.back}
         className={`${styles.back} ${fixed ? "" : styles.scrollsAway}`}
       >
         <IconButton icon={icon} as="span" style={{ width: "100%", height: "100%" }} />
       </Link>
-      {menu ? <PrimaryNav active={active} tone={tone} fixed={fixed} /> : null}
+      {menu ? <PrimaryNav locale={locale} active={active} tone={tone} fixed={fixed} /> : null}
     </>
   );
 }

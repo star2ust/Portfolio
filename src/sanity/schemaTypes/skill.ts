@@ -7,6 +7,10 @@ export const skill = defineType({
   name: "skill",
   title: "Навык",
   type: "document",
+  groups: [
+    { name: "russian", title: "Русский", default: true },
+    { name: "english", title: "English" },
+  ],
   fields: [
     defineField({
       name: "name",
@@ -28,6 +32,14 @@ export const skill = defineType({
       type: "text",
       rows: 4,
       validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "bodyEn",
+      title: "EN — Описание",
+      type: "text",
+      rows: 4,
+      description: "Пусто = на англоязычной версии сайта используется русский текст.",
+      group: "english",
     }),
   ],
   preview: {

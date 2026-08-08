@@ -7,6 +7,7 @@ import { ProjectMeta } from "@/components/media/ProjectMeta";
 import { PrevNextLink } from "@/components/navigation/PrevNextLink";
 import { Appear } from "@/motion/Appear";
 import { GrowRule } from "@/motion/GrowRule";
+import { getDictionary, localeHref, type Locale } from "@/lib/i18n";
 import type { Project } from "@/lib/content";
 import styles from "./DetailScreen.module.css";
 
@@ -14,6 +15,7 @@ export interface DetailScreenProps {
   project: Project;
   prev: Project;
   next: Project;
+  locale: Locale;
 }
 
 /** Project detail — text column left, media column right (tablet-landscape and up) or media
@@ -38,10 +40,11 @@ export interface DetailScreenProps {
  *  Once a project has real `gallery`/`vimeoUrl` values in Sanity, this renders an actual photo
  *  slider and a Vimeo embed in that rail instead; a project with neither still falls back to the
  *  flat placeholder chips, so an empty CMS entry never renders a broken player. */
-export function DetailScreen({ project, prev, next }: DetailScreenProps) {
+export function DetailScreen({ project, prev, next, locale }: DetailScreenProps) {
+  const dict = getDictionary(locale);
   return (
     <main className={styles.stage}>
-      <SiteChrome icon="close" backHref="/work" menu={false} />
+      <SiteChrome locale={locale} icon="close" backHref="/work" menu={false} />
       <div className={styles.layout}>
         <div className={styles.contentRow}>
           <Appear delay={0} from="up" className={styles.mediaCol}>
@@ -56,14 +59,18 @@ export function DetailScreen({ project, prev, next }: DetailScreenProps) {
             </div>
             <div className={styles.mediaRail}>
               {project.vimeoUrl ? (
-                <VideoEmbed vimeoUrl={project.vimeoUrl} title={`${project.title} — видео`} className={styles.videoSlot} />
+                <VideoEmbed
+                  vimeoUrl={project.vimeoUrl}
+                  title={`${project.title} — ${dict.detail.videoTitleSuffix}`}
+                  className={styles.videoSlot}
+                />
               ) : (
-                <MediaPlaceholder kind="video" label="Видео" className={styles.videoSlot} />
+                <MediaPlaceholder kind="video" label={dict.detail.video} className={styles.videoSlot} />
               )}
               {project.gallery && project.gallery.length > 0 ? (
-                <MediaGallery images={project.gallery} alt={project.title} className={styles.sliderSlot} />
+                <MediaGallery images={project.gallery} alt={project.title} locale={locale} className={styles.sliderSlot} />
               ) : (
-                <MediaPlaceholder kind="image" label="Слайдер" className={styles.sliderSlot} />
+                <MediaPlaceholder kind="image" label={dict.detail.slider} className={styles.sliderSlot} />
               )}
             </div>
           </Appear>
@@ -85,15 +92,27 @@ export function DetailScreen({ project, prev, next }: DetailScreenProps) {
               <p className={styles.body}>{project.body}</p>
             </Appear>
             <Appear delay={440} className={styles.metaRow}>
-              <ProjectMeta label="Задачи:" body={project.tasks.join("\n")} />
-              <ProjectMeta label="Результат:" body={project.result} />
+              <ProjectMeta label={dict.projectMeta.tasks} body={project.tasks.join("\n")} />
+              <ProjectMeta label={dict.projectMeta.result} body={project.result} />
             </Appear>
           </div>
         </div>
 
         <div className={styles.pager}>
-          <PrevNextLink direction="prev" href={`/work/${prev.slug}`} thumb={prev.image} projectTitle={prev.title} />
-          <PrevNextLink direction="next" href={`/work/${next.slug}`} thumb={next.image} projectTitle={next.title} />
+          <PrevNextLink
+            direction="prev"
+            href={localeHref(locale, `/work/${prev.slug}`)}
+            thumb={prev.image}
+            projectTitle={prev.title}
+            locale={locale}
+          />
+          <PrevNextLink
+            direction="next"
+            href={localeHref(locale, `/work/${next.slug}`)}
+            thumb={next.image}
+            projectTitle={next.title}
+            locale={locale}
+          />
         </div>
       </div>
     </main>

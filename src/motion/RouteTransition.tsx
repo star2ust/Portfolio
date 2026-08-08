@@ -6,7 +6,7 @@ import { Preloader } from "./Preloader";
 import { ArcWipe } from "./ArcWipe";
 import { useReducedMotion } from "./useReducedMotion";
 
-const DETAIL_PATTERN = /^\/work\/[^/]+$/;
+const DETAIL_PATTERN = /^\/(ru|en)\/work\/[^/]+$/;
 
 function isDetailRoute(path: string): boolean {
   return DETAIL_PATTERN.test(path);

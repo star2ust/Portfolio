@@ -4,19 +4,22 @@ import { PageTitle } from "@/components/typography/PageTitle";
 import { ContactRow } from "@/components/screens/ContactRow";
 import { Appear } from "@/motion/Appear";
 import { GrowRule } from "@/motion/GrowRule";
+import { getDictionary, type Locale } from "@/lib/i18n";
 import type { SiteSettings } from "@/lib/content";
 import styles from "./ContactScreen.module.css";
 
 export interface ContactScreenProps {
   settings: SiteSettings;
+  locale: Locale;
 }
 
 /** Контакты — §9: «Связь.» rises bottom→top, its rule grows from the centre outward, then the
  *  contact rows reveal left→right with fade, staggered. */
-export function ContactScreen({ settings }: ContactScreenProps) {
+export function ContactScreen({ settings, locale }: ContactScreenProps) {
+  const dict = getDictionary(locale);
   return (
     <main className={styles.stage}>
-      <SiteChrome active="КОНТАКТЫ" />
+      <SiteChrome locale={locale} active={dict.nav.contact} />
       <div className={styles.center}>
         <div className={styles.block}>
           <Appear delay={0} from="up">

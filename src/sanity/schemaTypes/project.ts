@@ -6,6 +6,10 @@ export const project = defineType({
   name: "project",
   title: "Проект",
   type: "document",
+  groups: [
+    { name: "russian", title: "Русский", default: true },
+    { name: "english", title: "English" },
+  ],
   fields: [
     defineField({
       name: "title",
@@ -79,6 +83,40 @@ export const project = defineType({
       title: "Результат",
       type: "text",
       rows: 3,
+    }),
+    defineField({
+      name: "titleEn",
+      title: "EN — Название",
+      type: "string",
+      description: "Английский перевод названия. Пусто = на англоязычной версии сайта используется русский текст.",
+      group: "english",
+    }),
+    defineField({
+      name: "roleEn",
+      title: "EN — Роль",
+      type: "string",
+      group: "english",
+    }),
+    defineField({
+      name: "bodyEn",
+      title: "EN — Описание",
+      type: "text",
+      rows: 4,
+      group: "english",
+    }),
+    defineField({
+      name: "tasksEn",
+      title: "EN — Задачи",
+      type: "array",
+      of: [{ type: "string" }],
+      group: "english",
+    }),
+    defineField({
+      name: "resultEn",
+      title: "EN — Результат",
+      type: "text",
+      rows: 3,
+      group: "english",
     }),
     defineField({
       name: "order",

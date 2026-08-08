@@ -8,7 +8,8 @@ const sizes = [
   { name: "laptop-1440", w: 1440, h: 900 },
   { name: "desktop-1920", w: 1920, h: 1080 },
 ];
-const routes = ["/", "/about", "/contact", "/work", "/work/vr-upnl", "/skills"];
+const routes = ["/ru", "/ru/about", "/ru/contact", "/ru/work", "/ru/work/vr-upnl", "/ru/skills",
+  "/en", "/en/about", "/en/contact", "/en/work", "/en/work/vr-upnl", "/en/skills"];
 
 mkdirSync("/tmp/shots2", { recursive: true });
 const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });

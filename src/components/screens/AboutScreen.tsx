@@ -3,11 +3,13 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { FooterLogo } from "@/components/layout/FooterLogo";
 import { MetaField } from "@/components/data/MetaField";
 import { Appear } from "@/motion/Appear";
+import { getDictionary, type Locale } from "@/lib/i18n";
 import type { SiteSettings } from "@/lib/content";
 import styles from "./AboutScreen.module.css";
 
 export interface AboutScreenProps {
   settings: SiteSettings;
+  locale: Locale;
 }
 
 /** Обо мне — portrait beside (desktop/laptop/tablet-landscape) or above (tablet-portrait/mobile)
@@ -16,11 +18,12 @@ export interface AboutScreenProps {
  *
  *  §4: title reveals left→right, then the subtitle, then the two body blocks top→bottom with
  *  blur — the layout fix (ИМЯ/Y.O. sharing one rule) is already just how the layout is built. */
-export function AboutScreen({ settings }: AboutScreenProps) {
+export function AboutScreen({ settings, locale }: AboutScreenProps) {
   const [imya, yo, role, contacts] = settings.about.meta;
+  const dict = getDictionary(locale);
   return (
     <main className={styles.stage}>
-      <SiteChrome active="ОБО МНЕ" />
+      <SiteChrome locale={locale} active={dict.nav.about} />
       <div className={styles.layout}>
         <div className={styles.portraitWrap}>
           <Image

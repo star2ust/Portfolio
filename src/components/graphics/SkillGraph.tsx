@@ -39,6 +39,7 @@ export interface SkillGraphProps {
   hub?: number;
   /** label size in px */
   fontSize?: number;
+  ariaLabel?: string;
   style?: CSSProperties;
 }
 
@@ -77,6 +78,7 @@ export function SkillGraph({
   dot = 18,
   hub = 30,
   fontSize = 14,
+  ariaLabel = "Граф навыков — выберите узел, чтобы увидеть описание",
   style,
 }: SkillGraphProps) {
   const list = nodes.map((n) => (typeof n === "string" ? { label: n } : n));
@@ -264,7 +266,7 @@ export function SkillGraph({
   return (
     <div
       role="group"
-      aria-label="Граф навыков — выберите узел, чтобы увидеть описание"
+      aria-label={ariaLabel}
       onPointerMove={move}
       onPointerUp={up}
       className={styles.wrap}

@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getDictionary, type Locale } from "@/lib/i18n";
 import styles from "./PrevNextLink.module.css";
 
 export interface PrevNextLinkProps {
@@ -11,17 +12,19 @@ export interface PrevNextLinkProps {
   projectTitle?: string;
   href: string;
   thumb?: string;
+  locale: Locale;
   style?: CSSProperties;
 }
 
 /** Project pager: label, a 135px arrow shaft (SVG, not an icon), and an optional 60%-opacity thumbnail. */
-export function PrevNextLink({ direction = "next", label, projectTitle, href, thumb, style }: PrevNextLinkProps) {
+export function PrevNextLink({ direction = "next", label, projectTitle, href, thumb, locale, style }: PrevNextLinkProps) {
   const isPrev = direction === "prev";
-  const text = label ?? (isPrev ? "Предыдущий" : "Следующий");
+  const dict = getDictionary(locale);
+  const text = label ?? (isPrev ? dict.prevNext.prev : dict.prevNext.next);
   return (
     <Link
       href={href}
-      aria-label={projectTitle ? `${text} проект: ${projectTitle}` : undefined}
+      aria-label={projectTitle ? `${text} ${dict.prevNext.projectWord}: ${projectTitle}` : undefined}
       className={`${styles.link} ${isPrev ? styles.prev : styles.next}`}
       style={style}
     >

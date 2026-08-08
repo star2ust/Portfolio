@@ -3,10 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { IconButton } from "@/components/core/IconButton";
-import { NavMenu, SITE_NAV } from "@/components/navigation/NavMenu";
+import { NavMenu } from "@/components/navigation/NavMenu";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { getDictionary, getSiteNav, type Locale } from "@/lib/i18n";
 import styles from "./PrimaryNav.module.css";
 
 export interface PrimaryNavProps {
+  locale: Locale;
   /** the nav label for the current route, e.g. "ГЛАВНАЯ" */
   active?: string;
   tone?: "default" | "invert";
@@ -20,10 +23,12 @@ export interface PrimaryNavProps {
 /** The site nav — a fixed vertical menu top-right at 768px+, a burger + full-screen overlay
  *  below that. Shared between SiteChrome (content screens) and the Hero, which has no back
  *  button or footer mark but still needs this. */
-export function PrimaryNav({ active, tone = "default", fixed = true }: PrimaryNavProps) {
+export function PrimaryNav({ locale, active, tone = "default", fixed = true }: PrimaryNavProps) {
   const [open, setOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dict = getDictionary(locale);
+  const navItems = getSiteNav(locale);
 
   // Move focus into the overlay on open, back to the burger on close (not just visually toggle)
   // — keyboard users shouldn't lose their place. Escape closes it too, the standard dialog convention.
@@ -42,14 +47,15 @@ export function PrimaryNav({ active, tone = "default", fixed = true }: PrimaryNa
   return (
     <>
       <div className={`${styles.navSlot} ${styles.navDesktop} ${fixed ? "" : styles.scrollsAway}`}>
-        <NavMenu items={SITE_NAV} active={active} tone={tone} />
+        <NavMenu locale={locale} items={navItems} active={active} tone={tone} />
+        <LanguageSwitcher locale={locale} tone={tone} />
       </div>
 
       <button
         ref={burgerRef}
         type="button"
         className={`${styles.burger} ${fixed ? "" : styles.scrollsAway}`}
-        aria-label="меню"
+        aria-label={dict.aria.menu}
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
@@ -65,12 +71,12 @@ export function PrimaryNav({ active, tone = "default", fixed = true }: PrimaryNa
           ref={closeRef}
           icon="close"
           size={34}
-          label="закрыть"
+          label={dict.aria.close}
           className={styles.overlayClose}
           onClick={() => setOpen(false)}
         />
-        <nav className={styles.overlayNav} aria-label="Основная навигация">
-          {SITE_NAV.map((item) => (
+        <nav className={styles.overlayNav} aria-label={dict.aria.primaryNav}>
+          {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -80,6 +86,7 @@ export function PrimaryNav({ active, tone = "default", fixed = true }: PrimaryNa
               {item.label}
             </Link>
           ))}
+          <LanguageSwitcher locale={locale} overlay />
         </nav>
       </div>
     </>
