@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import styles from "./MediaGallery.module.css";
@@ -10,73 +7,38 @@ export interface MediaGalleryProps {
   alt: string;
   locale: Locale;
   className?: string;
-  /** Opens the current slide (its index within `images`) in the full-screen Lightbox instead of
-   *  this inline strip — the inline slider is too small to make out detail on a phone, which is
-   *  the specific case this exists for. Omit to leave the frame non-interactive. */
+  /** Opens a photo (its index within `images`) in the full-screen Lightbox — the point of this
+   *  list is a quick, legible preview; the Lightbox is where you actually look at a photo.
+   *  Omit to render plain (non-interactive) tiles. */
   onPhotoClick?: (index: number) => void;
 }
 
-/** A small image slider for the detail page's "Слайдер" slot — real content when the project has
- *  more than one gallery photo in Sanity, otherwise the caller falls back to a single static
- *  image or the flat placeholder. Arrows reuse the thin-shaft line motif from PrevNextLink
- *  rather than the raster icon set, since this is inline chrome, not a page-level control. */
+/** The detail page's "Слайдер" slot: every gallery photo as its own 16:9 tile, stacked (not a
+ *  one-at-a-time carousel — the source's own gallery photos are frequently shot in portrait, and
+ *  a carousel that fills a tall narrow rail with one portrait photo at a time read as "one solid
+ *  vertical photo", not a gallery). object-fit: contain, not cover: a portrait photo shrinks to
+ *  fit its 16:9 frame with letterboxing (var(--surface-media) fill) instead of being cropped to
+ *  fill it — matches the cover photo's own hero crop being the one deliberately-cropped photo on
+ *  this page, not every photo on it. */
 export function MediaGallery({ images, alt, locale, className, onPhotoClick }: MediaGalleryProps) {
-  const [index, setIndex] = useState(0);
   const dict = getDictionary(locale);
   if (images.length === 0) return null;
 
-  const go = (delta: number) => setIndex((i) => (i + delta + images.length) % images.length);
-
   return (
-    <div className={`${styles.wrap} ${className ?? ""}`}>
-      <div
-        className={styles.frame}
-        role={onPhotoClick ? "button" : undefined}
-        tabIndex={onPhotoClick ? 0 : undefined}
-        aria-label={onPhotoClick ? dict.gallery.openPhoto : undefined}
-        onClick={onPhotoClick ? () => onPhotoClick(index) : undefined}
-        onKeyDown={
-          onPhotoClick
-            ? (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onPhotoClick(index);
-                }
-              }
-            : undefined
-        }
-        style={onPhotoClick ? { cursor: "pointer" } : undefined}
-      >
-        {images.map((src, i) => (
-          <Image
-            key={src}
-            src={src}
-            alt={i === 0 ? alt : `${alt} — ${dict.gallery.photoSuffix} ${i + 1}`}
-            fill
-            sizes="(max-width: 1113px) 100vw, 50vw"
-            className={styles.image}
-            style={{ opacity: i === index ? 1 : 0, pointerEvents: i === index ? "auto" : "none" }}
-            priority={i === 0}
-          />
-        ))}
-      </div>
-      {images.length > 1 ? (
-        <div className={styles.controls}>
-          <button type="button" aria-label={dict.gallery.prevPhoto} className={styles.arrow} onClick={() => go(-1)}>
-            <svg width="18" height="13" viewBox="0 0 18 13" aria-hidden="true">
-              <path d="M18 6.5H1M5 1 1 6.5 5 12" strokeWidth="1" fill="none" />
-            </svg>
+    <div className={`${styles.list} ${className ?? ""}`}>
+      {images.map((src, i) => {
+        const photoAlt = i === 0 ? alt : `${alt} — ${dict.gallery.photoSuffix} ${i + 1}`;
+        const image = <Image src={src} alt={photoAlt} fill sizes="(max-width: 1113px) 100vw, 50vw" className={styles.image} priority={i === 0} />;
+        return onPhotoClick ? (
+          <button key={`${i}-${src}`} type="button" className={styles.tile} onClick={() => onPhotoClick(i)} aria-label={dict.gallery.openPhoto}>
+            {image}
           </button>
-          <span className={styles.count}>
-            {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
-          </span>
-          <button type="button" aria-label={dict.gallery.nextPhoto} className={styles.arrow} onClick={() => go(1)}>
-            <svg width="18" height="13" viewBox="0 0 18 13" aria-hidden="true">
-              <path d="M0 6.5h17M13 1l4 5.5-4 5.5" strokeWidth="1" fill="none" />
-            </svg>
-          </button>
-        </div>
-      ) : null}
+        ) : (
+          <div key={`${i}-${src}`} className={styles.tile}>
+            {image}
+          </div>
+        );
+      })}
     </div>
   );
 }

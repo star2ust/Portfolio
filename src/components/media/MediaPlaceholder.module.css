@@ -1,6 +1,6 @@
 .wrap {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -15,10 +15,8 @@
 .label {
   font-family: var(--font-core);
   font-weight: var(--fw-light);
-  /* Not var(--fs-body-lg)/nowrap any more: this now lives in the detail page's narrow
-     video/slider rail (as little as ~64px wide on mobile), where a fixed 20px nowrap label
-     overflowed its box and got clipped mid-word. cqw (container width, not viewport width)
-     scales it down there without affecting a wider box the same component might sit in. */
+  /* cqw (container width, not viewport width) so this scales with whatever width the video/
+     slider slot actually gets at each breakpoint, not the viewport as a whole. */
   font-size: clamp(9px, 16cqw, var(--fs-body-lg));
   line-height: 1.3;
   letter-spacing: var(--ls-wide);

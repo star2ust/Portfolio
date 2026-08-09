@@ -29,33 +29,45 @@
   gap: 16px;
 }
 
+/* Column by default (cover photo, then the video/gallery rail stacked below it, both full
+   width) — mobile/tablet-portrait's shape. The "media beside text" breakpoint further down
+   switches this back to a row (cover left, rail right). */
 .mediaCol {
   order: 1;
   flex: 0 0 auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 8px;
 }
 .imageWrap {
   position: relative;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  width: 100%;
   aspect-ratio: 16 / 9;
 }
 .image {
   object-fit: cover;
 }
+/* The video/gallery rail: a stack of 16:9 tiles (VideoTile + MediaGallery's own photo tiles),
+   not a single element sized to fill whatever height the row layout hands it — a tile's own
+   aspect-ratio drives its height from its *width* now, so the rail's total height is just
+   however many tiles it holds. Capped + independently scrollable (matching .textCol's own
+   "scroll internally, never grow the page" fallback) so a project with a long gallery can't blow
+   past .stage's fixed one-viewport height — most projects with 2-4 photos won't ever need to
+   actually scroll this, it's a backstop for a long one. */
 .mediaRail {
   flex: 0 0 auto;
-  width: 64px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
 }
-.videoSlot {
-  flex: 0 0 34%;
-}
+.videoSlot,
 .sliderSlot {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  width: 100%;
 }
 
 .textCol {
@@ -122,7 +134,8 @@
   padding-top: 12px;
 }
 
-/* ---------- tablet portrait: media row above a scrollable text column, same shape as mobile ---------- */
+/* ---------- tablet portrait: media (cover + rail, both stacked) above a scrollable text
+   column, same shape as mobile ---------- */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
   .index { font-size: 13px; }
   .title { font-size: 30px; line-height: 1.15; }
@@ -130,10 +143,12 @@
   .body { font-size: 14px; line-height: 1.5; }
   .metaRow { flex-direction: row; gap: 16px; }
   .textCol { max-width: 720px; }
-  .mediaRail { width: 90px; }
+  .mediaRail { max-height: 280px; }
 }
 
-/* ---------- tablet landscape / laptop / desktop: media beside text ---------- */
+/* ---------- tablet landscape / laptop / desktop: media beside text — cover left, the video/
+   gallery rail right, widened well past its old 100-115px (just enough for a narrow chip) so a
+   16:9 tile actually reads as landscape-shaped instead of a near-square sliver. ---------- */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
   .contentRow {
     flex-direction: row;
@@ -150,9 +165,20 @@
     order: 2;
     flex: 1 1 420px;
     height: 100%;
+    flex-direction: row;
   }
-  .imageWrap { aspect-ratio: auto; }
-  .mediaRail { width: 100px; }
+  .imageWrap {
+    flex: 1 1 auto;
+    width: auto;
+    aspect-ratio: auto;
+  }
+  .mediaRail {
+    flex: 0 0 auto;
+    width: 220px;
+    max-height: none;
+    height: 100%;
+    overflow-y: auto;
+  }
   .metaRow { flex-direction: row; gap: 16px; }
 }
 
@@ -169,7 +195,7 @@
   .role { font-size: 16px; }
   .body { font-size: 15px; line-height: 1.45; }
   .textCol { max-width: 550px; }
-  .mediaRail { width: 115px; }
+  .mediaRail { width: 260px; }
 }
 
 @media (min-width: 1920px) {
@@ -178,5 +204,5 @@
   .role { font-size: var(--fs-body-lg); }
   .body { font-size: var(--fs-body-lg); line-height: 1.35; }
   .textCol { max-width: 618px; }
-  .mediaRail { width: var(--rail-w); }
+  .mediaRail { width: 320px; }
 }

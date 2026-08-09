@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { MediaPlaceholder } from "@/components/media/MediaPlaceholder";
 import { MediaGallery } from "@/components/media/MediaGallery";
-import { VideoEmbed } from "@/components/media/VideoEmbed";
+import { VideoTile } from "@/components/media/VideoTile";
 import { Lightbox } from "@/components/media/Lightbox";
 import { Appear } from "@/motion/Appear";
 import { getDictionary, type Locale } from "@/lib/i18n";
@@ -14,18 +14,30 @@ import styles from "./DetailScreen.module.css";
 export interface DetailMediaProps {
   project: Project;
   locale: Locale;
+  /** Vimeo's own oEmbed thumbnail, fetched server-side by the page (see src/lib/vimeo.ts) —
+   *  undefined when there's no video or the fetch failed, either way VideoTile still renders a
+   *  working (just plain) poster. */
+  videoThumbnail?: string;
 }
 
-/** The detail page's media column (cover photo + video/slider rail) — split out from
- *  DetailScreen as its own client island specifically to own the Lightbox's open/index state,
- *  so DetailScreen itself can stay a server component for everything else.
+/** The detail page's media column: the cover photo, then the video/gallery rail below (mobile/
+ *  tablet-portrait) or beside it (landscape+) — split out from DetailScreen as its own client
+ *  island specifically to own the Lightbox's open/index state, so DetailScreen itself can stay a
+ *  server component for everything else.
  *
- *  Clicking the cover photo, or any photo inside the inline slider, opens the same full-screen
- *  Lightbox at that photo's position within the combined [cover, ...gallery] set — "flip
- *  through the photos like in a gallery" from a photo that's otherwise too small to make out on
- *  a phone (§13 of the mobile test-round feedback). A project with no gallery still gets a
- *  working lightbox with just the one (cover) photo — no arrows, just the enlarge. */
-export function DetailMedia({ project, locale }: DetailMediaProps) {
+ *  The rail is a stack of 16:9 tiles (VideoTile + MediaGallery's photo tiles), not the old narrow
+ *  height-driven strip — a portrait-shot gallery photo used to fill that strip nearly
+ *  edge-to-edge and read as "one solid vertical photo" rather than a gallery; a 16:9 tile with
+ *  object-fit: contain shrinks a portrait photo to fit instead, matching what "compress it and
+ *  give it a 16:9 preview" describes.
+ *
+ *  Clicking the cover photo, or any photo inside the gallery list, opens the same full-screen
+ *  Lightbox at that photo's position within the combined [cover, ...gallery] set — "flip through
+ *  the photos like in a gallery" from a photo that's otherwise too small to make out on a phone.
+ *  Clicking the video tile opens VideoLightbox (see VideoTile) instead of playing inline at rail
+ *  size. A project with no gallery still gets a working lightbox with just the one (cover) photo
+ *  — no arrows, just the enlarge. */
+export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProps) {
   const dict = getDictionary(locale);
   const combined = [project.image, ...(project.gallery ?? [])];
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -49,9 +61,11 @@ export function DetailMedia({ project, locale }: DetailMediaProps) {
         </button>
         <div className={styles.mediaRail}>
           {project.vimeoUrl ? (
-            <VideoEmbed
+            <VideoTile
               vimeoUrl={project.vimeoUrl}
               title={`${project.title} — ${dict.detail.videoTitleSuffix}`}
+              thumbnailUrl={videoThumbnail}
+              locale={locale}
               className={styles.videoSlot}
             />
           ) : (
