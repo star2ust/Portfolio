@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useReducedMotion } from "@/motion/useReducedMotion";
 import { markHeroVideoReady } from "@/motion/heroReady";
@@ -34,10 +34,34 @@ import styles from "./HeroScreen.module.css";
  * connection genuinely hasn't received a single frame yet — is covered from the other side: this
  * fires markHeroVideoReady() (see heroReady.ts) on the same onLoadedData, which RouteTransition's
  * Preloader can optionally stay up and wait on so the video is what greets a first-time visitor,
- * not its poster. */
+ * not its poster.
+ *
+ * One more real-world gap the attributes alone don't close: some browsers — most commonly on a
+ * data-saver-enabled mobile connection, or inside an in-app/embedded webview (Instagram, etc.) —
+ * treat the declarative `autoplay` attribute as a hint they're free to skip, even for a muted
+ * video that's always supposed to be autoplay-eligible. When that happens the video still loads
+ * (onLoadedData fires, the crossfade happens) but sits frozen on its first frame — visually
+ * indistinguishable from "the video never started." The effect below is the standard backstop:
+ * an explicit imperative play() call, retried if the browser (or an OS-level interruption —
+ * switching apps, a phone call) ever pauses it afterward. play()'s promise rejects rather than
+ * throwing when a browser genuinely, deliberately blocks it — caught and ignored, same graceful
+ * "just stay on the poster" fallback as the video-not-loaded-yet case. */
 export function HeroVideo() {
   const reducedMotion = useReducedMotion();
   const [videoReady, setVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    const video = videoRef.current;
+    if (!video) return;
+    const tryPlay = () => {
+      video.play().catch(() => {});
+    };
+    tryPlay();
+    video.addEventListener("pause", tryPlay);
+    return () => video.removeEventListener("pause", tryPlay);
+  }, [reducedMotion]);
 
   return (
     <div className={styles.videoWrap}>
@@ -52,6 +76,7 @@ export function HeroVideo() {
       />
       {!reducedMotion && (
         <video
+          ref={videoRef}
           className={styles.video}
           style={{ opacity: videoReady ? 1 : 0 }}
           src="/images/hero/BookRender1.mp4"
