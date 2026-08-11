@@ -161,6 +161,10 @@
     padding: calc(var(--chrome-back-top) + var(--chrome-icon-size) + 24px) 0 24px;
     overflow-y: auto;
     min-height: 0;
+    /* Shifts the whole centered block up off dead-center — a transform, not a change to the
+       centering math itself, so it doesn't touch anything the no-scroll tuning above (or tablet
+       landscape's own -28px override below) depends on. */
+    transform: translateY(-75px);
   }
   /* Pulled out of .copy's own flex column entirely (it used to live there with a margin-top:auto
      push) — .copy's height is exactly the content it needs to fit without scrolling now, and a

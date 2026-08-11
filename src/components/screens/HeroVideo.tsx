@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useReducedMotion } from "@/motion/useReducedMotion";
+import { markHeroVideoReady } from "@/motion/heroReady";
 import styles from "./HeroScreen.module.css";
 
 /**
@@ -27,7 +28,13 @@ import styles from "./HeroScreen.module.css";
  * browser's own, fairly conservative "won't need to stall for more buffering soon" estimate) to
  * `onLoadedData` (fires as soon as the very first frame actually exists) starts playback the
  * moment there's something real to show, rather than waiting for a further buffering margin a
- * muted looping background video doesn't meaningfully need. */
+ * muted looping background video doesn't meaningfully need.
+ *
+ * The remaining case that can't be preload-attribute'd away — a first-ever visit on a slow
+ * connection genuinely hasn't received a single frame yet — is covered from the other side: this
+ * fires markHeroVideoReady() (see heroReady.ts) on the same onLoadedData, which RouteTransition's
+ * Preloader can optionally stay up and wait on so the video is what greets a first-time visitor,
+ * not its poster. */
 export function HeroVideo() {
   const reducedMotion = useReducedMotion();
   const [videoReady, setVideoReady] = useState(false);
@@ -57,7 +64,10 @@ export function HeroVideo() {
           // typings for <video> haven't caught up to it yet, same gap as <img>/<link>).
           fetchPriority="high"
           aria-hidden="true"
-          onLoadedData={() => setVideoReady(true)}
+          onLoadedData={() => {
+            setVideoReady(true);
+            markHeroVideoReady();
+          }}
         />
       )}
     </div>

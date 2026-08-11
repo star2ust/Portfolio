@@ -7,16 +7,24 @@ import { ArcWipe } from "./ArcWipe";
 import { useReducedMotion } from "./useReducedMotion";
 
 const DETAIL_PATTERN = /^\/(ru|en)\/work\/[^/]+$/;
+const HOME_PATTERN = /^\/(ru|en)\/?$/;
 
 function isDetailRoute(path: string): boolean {
   return DETAIL_PATTERN.test(path);
+}
+
+function isHomeRoute(path: string): boolean {
+  return HOME_PATTERN.test(path);
 }
 
 type Phase = "idle" | "covering" | "revealing";
 
 /**
  * Root-layout chrome for the choreographed page-transition layer:
- *  - §1/§2: the preloader plays once on first load, then the first page fades in.
+ *  - §1/§2: the preloader plays once on first load, then the first page fades in. When that
+ *    first load lands on the Hero specifically, the preloader also waits on the Hero video's own
+ *    readiness signal (see heroReady.ts) — first-time visitors landing anywhere else never mount
+ *    HeroVideo, so this must stay scoped to isHomeRoute, not run unconditionally.
  *  - §3: every route change covers the screen, navigates underneath the cover, then cross-fades
  *    it away to reveal the new page — matching the source's own two-stage approach (an arc-
  *    shaped wipe to cover, then a separate flat sheet that fades away, "so the new screen
@@ -93,7 +101,7 @@ export function RouteTransition({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {!booted ? <Preloader onDone={onPreloaderDone} /> : null}
+      {!booted ? <Preloader onDone={onPreloaderDone} waitForHero={isHomeRoute(pathname)} /> : null}
       {/* key={pathname}: forces a real unmount+remount on every navigation. Without it, two
           routes that render the same component at the same tree position (e.g. /work/a ->
           /work/b, both DetailScreen) can get reconciled onto the *existing* fiber instead of
