@@ -69,7 +69,7 @@ export function DetailScreen({ project, prev, next, locale, videoThumbnail }: De
               <p className={styles.body}>{project.body}</p>
             </Appear>
             <Appear delay={440} className={styles.metaRow}>
-              <ProjectMeta label={dict.projectMeta.tasks} body={project.tasks.join("\n")} />
+              <ProjectMeta label={dict.projectMeta.tasks} items={project.tasks} />
               <ProjectMeta label={dict.projectMeta.result} body={project.result} />
             </Appear>
           </div>

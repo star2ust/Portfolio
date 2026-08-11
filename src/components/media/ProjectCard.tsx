@@ -43,10 +43,12 @@ export function ProjectCard({ href, title, tech, year, image, priority, style }:
       </div>
       <div className={styles.body}>
         <span className={styles.title}>{title}</span>
-        <div className={styles.rule} />
-        <div className={styles.meta}>
-          <span className={styles.tech}>{tech}</span>
-          <span className={styles.year}>{year}</span>
+        <div className={styles.footer}>
+          <div className={styles.rule} />
+          <div className={styles.meta}>
+            <span className={styles.tech}>{tech}</span>
+            <span className={styles.year}>{year}</span>
+          </div>
         </div>
       </div>
     </Link>

@@ -97,14 +97,19 @@ async function main() {
   }
 
   console.log(`\nCreating ${seed.skills.length} skills...`);
+  // Deterministic per-name ID, shared by every skill doc — lets a satellite reference its parent
+  // by the same formula before both documents necessarily exist yet. Sanity doesn't enforce
+  // referential integrity at write time, so creation order here doesn't matter.
+  const skillId = (name) => `skill-${name.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`;
   for (const s of seed.skills) {
     await client.createOrReplace({
-      _id: `skill-${s.name.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`,
+      _id: skillId(s.name),
       _type: "skill",
       name: s.name,
       level: s.level,
       body: s.body,
       bodyEn: s.bodyEn,
+      ...(s.parent ? { parent: { _type: "reference", _ref: skillId(s.parent) } } : {}),
     });
   }
 

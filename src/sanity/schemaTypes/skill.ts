@@ -1,8 +1,6 @@
 import { defineField, defineType } from "sanity";
 
-/** A node in the Skills force graph. Graph *edges* (which node links to which) stay in code
- *  (src/components/screens/skillGraphEdges.ts) — that's a design decision, not content the
- *  author edits day to day; only name/level/body are here. */
+/** A node in the Skills force graph. */
 export const skill = defineType({
   name: "skill",
   title: "Навык",
@@ -38,6 +36,19 @@ export const skill = defineType({
       type: "text",
       rows: 4,
       validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "parent",
+      title: "Ответвляется от",
+      type: "reference",
+      to: [{ type: "skill" }],
+      description:
+        "Если выбрать другой навык, этот узел на графе будет исходить от него, а не от центра. Пусто = соединяется с центром.",
+      options: { disableNew: true },
+      validation: (r) =>
+        r.custom((value, ctx) =>
+          value && (value as { _ref?: string })._ref === ctx.document?._id ? "Навык не может ссылаться сам на себя" : true,
+        ),
     }),
     defineField({
       name: "bodyEn",

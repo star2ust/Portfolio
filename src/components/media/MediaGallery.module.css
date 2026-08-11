@@ -9,7 +9,10 @@
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--surface-media);
+  /* No fill color: object-fit: contain pillarboxes a portrait-sourced photo instead of cropping
+     it, and a flat grey box showing in those side margins read as a visible "background behind
+     the photo" — the page's own background shows through instead. */
+  background: transparent;
   overflow: hidden;
   cursor: pointer;
 }

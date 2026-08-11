@@ -1,7 +1,6 @@
 import { groq } from "next-sanity";
 import { client } from "./client";
 import { urlFor } from "./image";
-import { SKILL_GRAPH_PARENTS } from "@/components/screens/skillGraphEdges";
 import type { Locale } from "@/lib/i18n";
 import {
   findAdjacentProjects,
@@ -95,9 +94,12 @@ interface RawSkill {
   level: number;
   body: string;
   bodyEn?: string;
+  /** Dereferenced by the query below to the parent skill's own `name` — undefined when the
+   *  "Ответвляется от" field is empty, which links this node straight to the hub. */
+  parent?: string;
 }
 
-const SKILLS_QUERY = groq`*[_type == "skill"] | order(name asc) { name, level, body, bodyEn }`;
+const SKILLS_QUERY = groq`*[_type == "skill"] | order(name asc) { name, level, body, bodyEn, "parent": parent->name }`;
 
 export async function getSkills(locale: Locale): Promise<Skill[]> {
   if (!client) return getSeedSkills(locale);
@@ -107,7 +109,7 @@ export async function getSkills(locale: Locale): Promise<Skill[]> {
     name: s.name,
     level: s.level,
     body: pick(locale, s.bodyEn, s.body) ?? s.body,
-    parent: SKILL_GRAPH_PARENTS[s.name],
+    parent: s.parent,
   }));
 }
 

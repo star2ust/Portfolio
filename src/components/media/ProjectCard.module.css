@@ -1,5 +1,6 @@
 .card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   color: var(--text-body);
   transition: color var(--dur) var(--ease);
@@ -11,6 +12,7 @@
 .media {
   position: relative;
   width: 100%;
+  flex: 0 0 auto;
   aspect-ratio: 601.667 / 337.282; /* the desktop card's own ratio, held at every breakpoint */
   background: var(--surface-media);
   overflow: hidden;
@@ -19,7 +21,14 @@
   object-fit: cover;
 }
 
+/* flex column, not a plain block: CSS grid stretches .card to match the tallest card in its row
+   (default align-items: stretch), and .body needs to actually *use* that extra height rather
+   than leave it as dead space below .meta — otherwise a short 1-line title's rule sits higher
+   than a long 2/3-line title's rule right next to it in the same row. */
 .body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
   padding-top: 14px;
 }
 .title {
@@ -32,11 +41,18 @@
   text-transform: uppercase;
   text-wrap: pretty;
   white-space: pre-line;
+  padding-bottom: 10px; /* the fixed title→rule gap, independent of any row-stretch below */
+}
+/* Wraps rule + meta as one unit and pins it to the bottom of .body via margin-top: auto — the
+   unit sits flush against .title normally, and absorbs any extra stretched height by sliding
+   down, so it lands at the same y position as every other card's footer in the row regardless of
+   how many lines that card's own title took. */
+.footer {
+  margin-top: auto;
 }
 .rule {
   height: 0.25px;
   background: var(--rule-ink);
-  margin-top: 10px;
   transition: background var(--dur) var(--ease);
 }
 .card:hover .rule {

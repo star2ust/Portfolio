@@ -42,7 +42,7 @@ export interface Dictionary {
   aria: { primaryNav: string; menu: string; close: string; back: string };
   prevNext: { prev: string; next: string; projectWord: string };
   projectMeta: { tasks: string; result: string };
-  detail: { video: string; slider: string; videoTitleSuffix: string };
+  detail: { videoTitleSuffix: string };
   gallery: { prevPhoto: string; nextPhoto: string; photoSuffix: string; openPhoto: string; openVideo: string };
   skillGraph: { ariaLabel: string };
   levelDots: { label: string };
@@ -64,7 +64,7 @@ const ru: Dictionary = {
   aria: { primaryNav: "Основная навигация", menu: "меню", close: "закрыть", back: "назад" },
   prevNext: { prev: "Предыдущий", next: "Следующий", projectWord: "проект" },
   projectMeta: { tasks: "Задачи:", result: "Результат:" },
-  detail: { video: "Видео", slider: "Слайдер", videoTitleSuffix: "видео" },
+  detail: { videoTitleSuffix: "видео" },
   gallery: { prevPhoto: "Предыдущее фото", nextPhoto: "Следующее фото", photoSuffix: "фото", openPhoto: "Открыть фото крупнее", openVideo: "Открыть видео" },
   skillGraph: { ariaLabel: "Граф навыков — выберите узел, чтобы увидеть описание" },
   levelDots: { label: "УРОВЕНЬ" },
@@ -87,7 +87,7 @@ const en: Dictionary = {
   aria: { primaryNav: "Primary navigation", menu: "menu", close: "close", back: "back" },
   prevNext: { prev: "Previous", next: "Next", projectWord: "project" },
   projectMeta: { tasks: "Tasks:", result: "Result:" },
-  detail: { video: "Video", slider: "Slider", videoTitleSuffix: "video" },
+  detail: { videoTitleSuffix: "video" },
   gallery: { prevPhoto: "Previous photo", nextPhoto: "Next photo", photoSuffix: "photo", openPhoto: "Open photo full-size", openVideo: "Open video" },
   skillGraph: { ariaLabel: "Skills graph — select a node to see the description" },
   levelDots: { label: "LEVEL" },

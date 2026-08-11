@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { MediaPlaceholder } from "@/components/media/MediaPlaceholder";
 import { MediaGallery } from "@/components/media/MediaGallery";
 import { VideoTile } from "@/components/media/VideoTile";
 import { Lightbox } from "@/components/media/Lightbox";
@@ -35,12 +34,15 @@ export interface DetailMediaProps {
  *  Lightbox at that photo's position within the combined [cover, ...gallery] set — "flip through
  *  the photos like in a gallery" from a photo that's otherwise too small to make out on a phone.
  *  Clicking the video tile opens VideoLightbox (see VideoTile) instead of playing inline at rail
- *  size. A project with no gallery still gets a working lightbox with just the one (cover) photo
- *  — no arrows, just the enlarge. */
+ *  size. Not every project has both — a project with neither drops the rail entirely rather than
+ *  showing an empty placeholder chip; .imageWrap's own flex:1 in the landscape+ layout absorbs
+ *  the freed space automatically. */
 export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProps) {
   const dict = getDictionary(locale);
   const combined = [project.image, ...(project.gallery ?? [])];
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const hasGallery = (project.gallery?.length ?? 0) > 0;
+  const hasRail = Boolean(project.vimeoUrl) || hasGallery;
 
   return (
     <>
@@ -59,30 +61,28 @@ export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProp
             className={styles.image}
           />
         </button>
-        <div className={styles.mediaRail}>
-          {project.vimeoUrl ? (
-            <VideoTile
-              vimeoUrl={project.vimeoUrl}
-              title={`${project.title} — ${dict.detail.videoTitleSuffix}`}
-              thumbnailUrl={videoThumbnail}
-              locale={locale}
-              className={styles.videoSlot}
-            />
-          ) : (
-            <MediaPlaceholder kind="video" label={dict.detail.video} className={styles.videoSlot} />
-          )}
-          {project.gallery && project.gallery.length > 0 ? (
-            <MediaGallery
-              images={project.gallery}
-              alt={project.title}
-              locale={locale}
-              className={styles.sliderSlot}
-              onPhotoClick={(i) => setLightboxIndex(i + 1)}
-            />
-          ) : (
-            <MediaPlaceholder kind="image" label={dict.detail.slider} className={styles.sliderSlot} />
-          )}
-        </div>
+        {hasRail ? (
+          <div className={styles.mediaRail}>
+            {project.vimeoUrl ? (
+              <VideoTile
+                vimeoUrl={project.vimeoUrl}
+                title={`${project.title} — ${dict.detail.videoTitleSuffix}`}
+                thumbnailUrl={videoThumbnail}
+                locale={locale}
+                className={styles.videoSlot}
+              />
+            ) : null}
+            {hasGallery ? (
+              <MediaGallery
+                images={project.gallery!}
+                alt={project.title}
+                locale={locale}
+                className={styles.sliderSlot}
+                onPhotoClick={(i) => setLightboxIndex(i + 1)}
+              />
+            ) : null}
+          </div>
+        ) : null}
       </Appear>
 
       {lightboxIndex != null ? (
