@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { VideoLightbox } from "@/components/media/VideoLightbox";
 import { getDictionary, type Locale } from "@/lib/i18n";
@@ -36,7 +37,15 @@ export function VideoTile({ vimeoUrl, title, thumbnailUrl, locale, className }: 
           </svg>
         </span>
       </button>
-      {open ? <VideoLightbox vimeoUrl={vimeoUrl} title={title} locale={locale} onClose={() => setOpen(false)} /> : null}
+      {/* Portaled straight to <body>, not rendered in place: VideoTile itself sits nested inside
+          DetailMedia's Appear-animated wrapper, which sets a real (non-"none") `transform` for
+          the ~1s entrance transition. A `position: fixed` descendant of *any* transformed
+          ancestor is sized/positioned against that ancestor's own box, not the viewport — for a
+          fast click within that first second, VideoLightbox's "fullscreen" stage measured out at
+          the tile's own small size instead of the real viewport. Escaping to `document.body`
+          sidesteps this outright, matching how Lightbox (rendered as an Appear-external sibling
+          in DetailMedia, never nested inside it) never had the problem in the first place. */}
+      {open ? createPortal(<VideoLightbox vimeoUrl={vimeoUrl} title={title} locale={locale} onClose={() => setOpen(false)} />, document.body) : null}
     </>
   );
 }

@@ -43,7 +43,15 @@ export interface Dictionary {
   prevNext: { prev: string; next: string; projectWord: string };
   projectMeta: { tasks: string; result: string };
   detail: { videoTitleSuffix: string };
-  gallery: { prevPhoto: string; nextPhoto: string; photoSuffix: string; openPhoto: string; openVideo: string };
+  gallery: {
+    prevPhoto: string;
+    nextPhoto: string;
+    photoSuffix: string;
+    openPhoto: string;
+    openVideo: string;
+    scrollPrev: string;
+    scrollNext: string;
+  };
   skillGraph: { ariaLabel: string };
   levelDots: { label: string };
   meta: {
@@ -65,7 +73,15 @@ const ru: Dictionary = {
   prevNext: { prev: "Предыдущий", next: "Следующий", projectWord: "проект" },
   projectMeta: { tasks: "Задачи:", result: "Результат:" },
   detail: { videoTitleSuffix: "видео" },
-  gallery: { prevPhoto: "Предыдущее фото", nextPhoto: "Следующее фото", photoSuffix: "фото", openPhoto: "Открыть фото крупнее", openVideo: "Открыть видео" },
+  gallery: {
+    prevPhoto: "Предыдущее фото",
+    nextPhoto: "Следующее фото",
+    photoSuffix: "фото",
+    openPhoto: "Открыть фото крупнее",
+    openVideo: "Открыть видео",
+    scrollPrev: "Прокрутить назад",
+    scrollNext: "Прокрутить вперёд",
+  },
   skillGraph: { ariaLabel: "Граф навыков — выберите узел, чтобы увидеть описание" },
   levelDots: { label: "УРОВЕНЬ" },
   meta: {
@@ -88,7 +104,15 @@ const en: Dictionary = {
   prevNext: { prev: "Previous", next: "Next", projectWord: "project" },
   projectMeta: { tasks: "Tasks:", result: "Result:" },
   detail: { videoTitleSuffix: "video" },
-  gallery: { prevPhoto: "Previous photo", nextPhoto: "Next photo", photoSuffix: "photo", openPhoto: "Open photo full-size", openVideo: "Open video" },
+  gallery: {
+    prevPhoto: "Previous photo",
+    nextPhoto: "Next photo",
+    photoSuffix: "photo",
+    openPhoto: "Open photo full-size",
+    openVideo: "Open video",
+    scrollPrev: "Scroll back",
+    scrollNext: "Scroll forward",
+  },
   skillGraph: { ariaLabel: "Skills graph — select a node to see the description" },
   levelDots: { label: "LEVEL" },
   meta: {

@@ -47,6 +47,10 @@
 }
 
 /* ---------- mobile / tablet-portrait: one flat swipeable strip ---------- */
+.compactStripWrap {
+  position: relative; /* anchors .compactArrow, which is positioned against this, not the strip's
+                          own scrolling content box */
+}
 .compactStrip {
   display: flex;
   gap: 8px;
@@ -57,6 +61,34 @@
   /* a peek of the next slide's edge reads as "more to swipe to" — a strip that exactly fills the
      viewport per slide can look like the end of the gallery even when it isn't. */
   padding-right: 24px;
+}
+/* Swiping the strip already works without these — they're a plain visual affordance so a row of
+   equal tiles doesn't read as "that's all of it" on a screen with no other scroll-hint
+   convention. Same dark-translucent-circle language as VideoTile's own play badge, not
+   Lightbox's arrows (those are white-on-dark for a black backdrop; this sits on the ordinary
+   page background). */
+.compactArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+}
+.compactArrow svg path {
+  stroke: currentColor;
+}
+.compactArrowLeft {
+  left: 8px;
+}
+.compactArrowRight {
+  right: 32px; /* clears .compactStrip's own padding-right: 24px (the "peek the next slide" gap) */
 }
 .compactSlide {
   position: relative;
@@ -152,7 +184,9 @@
   margin: 12px 0 0;
   font-family: var(--font-core);
   font-weight: var(--fw-light);
-  font-size: 11px;
+  /* was 11px — noticeably smaller than Задачи/Результат (ProjectMeta) right below it; bumped to
+     match the same 12px/13px scale ProjectMeta now uses on mobile/tablet-portrait. */
+  font-size: 12px;
   line-height: 1.5;
   color: var(--text-body);
   white-space: pre-line;
@@ -179,7 +213,7 @@
   .index { font-size: 13px; }
   .title { font-size: 30px; line-height: 1.15; }
   .role { font-size: 16px; }
-  .body { font-size: 14px; line-height: 1.5; }
+  .body { font-size: 13px; line-height: 1.5; } /* was 14px — matches ProjectMeta's 13px here too */
   .metaRow { flex-direction: row; gap: 16px; }
   .textCol { max-width: 720px; }
   .compactSlide { height: 260px; }
@@ -206,7 +240,7 @@
     height: 100%;
     flex-direction: row;
   }
-  .compactStrip {
+  .compactStripWrap {
     display: none;
   }
   .imageWrap {

@@ -20,7 +20,12 @@
 .body {
   font-family: var(--font-core);
   font-weight: var(--fw-light);
-  font-size: var(--fs-nav);
+  /* var(--fs-nav) on mobile/tablet-portrait specifically (12/13px below, restored at landscape+)
+     — not the shared --fs-nav token directly, which also drives unrelated nav chrome elsewhere
+     on the site. Result (via this and DetailScreen.module.css's own .body) reads as one
+     consistent body-text scale with the description right above it, instead of the description
+     running noticeably smaller than Задачи/Результат next to it. */
+  font-size: 12px;
   line-height: 1.55;
   color: var(--text-body);
   white-space: pre-line;
@@ -43,8 +48,24 @@
 .listItem {
   font-family: var(--font-core);
   font-weight: var(--fw-light);
-  font-size: var(--fs-nav);
+  font-size: 12px;
   line-height: 1.55;
   color: var(--text-body);
   text-wrap: pretty;
+}
+
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
+  .body,
+  .listItem {
+    font-size: 13px;
+  }
+}
+
+/* Landscape+: restore the original shared token instead of this page-specific 12/13px scale —
+   only mobile/tablet-portrait had the description/tasks mismatch this was fixing. */
+@media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape), (min-width: 1114px) {
+  .body,
+  .listItem {
+    font-size: var(--fs-nav);
+  }
 }
