@@ -37,12 +37,10 @@ export interface DetailScreenProps {
  *  tried and then deliberately dropped in favor of this simpler fade, by request. The footer
  *  mark is intentionally omitted here, same as the source — it would sit over "Предыдущий".
  *
- *  The video/gallery rail: the source bundle itself ships these as "labelled placeholders" —
- *  project/ui_kits/portfolio/README.md calls them "deliberately unfinished, as in the source."
- *  Once a project has real `gallery`/`vimeoUrl` values in Sanity, this renders a real stack of
- *  16:9 photo tiles and a video poster (opening VideoLightbox on click) instead; a project with
- *  neither still falls back to the flat placeholder chips, so an empty CMS entry never renders a
- *  broken player. */
+ *  The video/gallery media (see DetailMedia): a stack/strip of 16:9 photo tiles plus a video
+ *  poster, all opening the same swipeable Lightbox on click, landing on whichever slide was
+ *  clicked. A project with neither gallery photos nor a video drops the rail/strip entirely
+ *  rather than showing an empty placeholder. */
 export function DetailScreen({ project, prev, next, locale, videoThumbnail }: DetailScreenProps) {
   const dict = getDictionary(locale);
   return (

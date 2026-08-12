@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { MediaGallery } from "@/components/media/MediaGallery";
 import { VideoTile } from "@/components/media/VideoTile";
-import { Lightbox } from "@/components/media/Lightbox";
+import { Lightbox, type LightboxSlide } from "@/components/media/Lightbox";
 import { Appear } from "@/motion/Appear";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import type { Project } from "@/lib/content";
@@ -30,11 +30,15 @@ export interface DetailMediaProps {
  *  object-fit: contain shrinks a portrait photo to fit instead, matching what "compress it and
  *  give it a 16:9 preview" describes.
  *
- *  Clicking the cover photo, or any photo inside the gallery list, opens the same full-screen
- *  Lightbox at that photo's position within the combined [cover, ...gallery] set — "flip through
- *  the photos like in a gallery" from a photo that's otherwise too small to make out on a phone.
- *  Clicking the video tile opens VideoLightbox (see VideoTile) instead of playing inline at rail
- *  size. Not every project has both — a project with neither drops the rail entirely rather than
+ *  Every clickable slide — cover, video, every gallery photo — opens the *same* Lightbox, landing
+ *  on that slide's position within one combined [cover, video?, ...gallery] sequence: swiping
+ *  through from a photo runs into the video too instead of it living in a separate modal someone
+ *  might swipe straight past without ever noticing. `slides`/the three index helpers below are
+ *  the single source of truth for that sequence — everything that can open the Lightbox (both the
+ *  compact strip's buttons and the landscape+ rail's) computes its own index from them rather than
+ *  hardcoding the offset a video slide shifts gallery photos by.
+ *
+ *  Not every project has both — a project with neither drops the rail entirely rather than
  *  showing an empty placeholder chip; .imageWrap's own flex:1 in the landscape+ layout absorbs
  *  the freed space automatically.
  *
@@ -42,9 +46,7 @@ export interface DetailMediaProps {
  *  .compactStrip/.imageWrap comments): mobile/tablet-portrait gets one flat horizontally-
  *  swipeable strip — cover, video, and every gallery photo as equal peer slides, so the cover
  *  photo and the rest of the gallery aren't two separate blocks each eating their own chunk of
- *  vertical space. Landscape+ keeps the original cover-left/rail-right split. Both branches share
- *  the same lightboxIndex/click semantics — clicking a photo slide in either one opens the same
- *  Lightbox at the same index.
+ *  vertical space. Landscape+ keeps the original cover-left/rail-right split.
  *
  *  The strip scrolls fine by touch/swipe on its own, but nothing about a row of same-sized tiles
  *  signals "there's more to the right" — arrowLeft/arrowRight are a plain affordance (visible on
@@ -54,10 +56,20 @@ export interface DetailMediaProps {
 export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProps) {
   const dict = getDictionary(locale);
   const gallery = project.gallery ?? [];
-  const combined = [project.image, ...gallery];
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const hasVideo = Boolean(project.vimeoUrl);
   const hasGallery = gallery.length > 0;
-  const hasRail = Boolean(project.vimeoUrl) || hasGallery;
+  const hasRail = hasVideo || hasGallery;
+
+  // The one shared [cover, video?, ...gallery] sequence every slide's click handler indexes into.
+  const slides: LightboxSlide[] = [
+    { type: "photo", src: project.image },
+    ...(hasVideo ? [{ type: "video", vimeoUrl: project.vimeoUrl! } as const] : []),
+    ...gallery.map((src): LightboxSlide => ({ type: "photo", src })),
+  ];
+  const videoIndex = hasVideo ? 1 : -1;
+  const galleryStartIndex = hasVideo ? 2 : 1;
+
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const stripRef = useRef<HTMLDivElement>(null);
 
   const scrollStrip = (direction: 1 | -1) => {
@@ -112,7 +124,7 @@ export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProp
                 priority
               />
             </button>
-            {project.vimeoUrl ? (
+            {hasVideo ? (
               // A plain wrapper, not className={styles.compactSlide} merged directly onto
               // VideoTile's own button (like .videoSlot does in the landscape+ rail below) —
               // VideoTile's own .tile already sets width/aspect-ratio/background, and those
@@ -124,12 +136,7 @@ export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProp
               // the conflict outright — VideoTile keeps its own untouched internal sizing, which
               // naturally lands on the same 16:9 shape as the wrapper around it instead of fighting it.
               <div className={styles.compactSlide}>
-                <VideoTile
-                  vimeoUrl={project.vimeoUrl}
-                  title={`${project.title} — ${dict.detail.videoTitleSuffix}`}
-                  thumbnailUrl={videoThumbnail}
-                  locale={locale}
-                />
+                <VideoTile thumbnailUrl={videoThumbnail} locale={locale} onClick={() => setLightboxIndex(videoIndex)} />
               </div>
             ) : null}
             {gallery.map((src, i) => (
@@ -137,7 +144,7 @@ export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProp
                 key={`compact-${i}-${src}`}
                 type="button"
                 className={styles.compactSlide}
-                onClick={() => setLightboxIndex(i + 1)}
+                onClick={() => setLightboxIndex(galleryStartIndex + i)}
                 aria-label={dict.gallery.openPhoto}
               >
                 <Image
@@ -168,13 +175,12 @@ export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProp
         </button>
         {hasRail ? (
           <div className={styles.mediaRail}>
-            {project.vimeoUrl ? (
+            {hasVideo ? (
               <VideoTile
-                vimeoUrl={project.vimeoUrl}
-                title={`${project.title} — ${dict.detail.videoTitleSuffix}`}
                 thumbnailUrl={videoThumbnail}
                 locale={locale}
                 className={styles.videoSlot}
+                onClick={() => setLightboxIndex(videoIndex)}
               />
             ) : null}
             {hasGallery ? (
@@ -183,7 +189,7 @@ export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProp
                 alt={project.title}
                 locale={locale}
                 className={styles.sliderSlot}
-                onPhotoClick={(i) => setLightboxIndex(i + 1)}
+                onPhotoClick={(i) => setLightboxIndex(galleryStartIndex + i)}
               />
             ) : null}
           </div>
@@ -192,7 +198,7 @@ export function DetailMedia({ project, locale, videoThumbnail }: DetailMediaProp
 
       {lightboxIndex != null ? (
         <Lightbox
-          images={combined}
+          slides={slides}
           alt={project.title}
           index={lightboxIndex}
           locale={locale}

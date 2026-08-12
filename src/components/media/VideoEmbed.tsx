@@ -4,8 +4,8 @@ import styles from "./VideoEmbed.module.css";
 export interface VideoEmbedProps {
   vimeoUrl: string;
   title: string;
-  /** true inside VideoLightbox, where the iframe is the whole point of opening it in the first
-   *  place — false (default) for any inline/poster context, so a video never starts playing
+  /** true for Lightbox's video slide, where the iframe is the whole point of opening it in the
+   *  first place — false (default) for any inline/poster context, so a video never starts playing
    *  (with sound, on a project detail page, unprompted) just because it scrolled into view. */
   autoplay?: boolean;
   className?: string;

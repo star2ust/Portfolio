@@ -1,7 +1,13 @@
 .wrap {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  /* Was width: 100% — inside .metaRow's flex-wrap row (see DetailScreen.module.css) that made
+     each ProjectMeta demand the *entire* row's width on its own, guaranteeing the two always
+     wrapped onto separate lines regardless of how much real space .metaRow actually had. flex:
+     1 1 240px is a preferred/shrinkable size instead, small enough that two of these plus the
+     row's own gap comfortably fit side by side on a tablet-portrait-width text column while
+     still wrapping to stacked on a phone too narrow for both. */
+  flex: 1 1 240px;
   max-width: 290px;
 }
 .rule {

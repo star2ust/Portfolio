@@ -88,7 +88,12 @@
   left: 8px;
 }
 .compactArrowRight {
-  right: 32px; /* clears .compactStrip's own padding-right: 24px (the "peek the next slide" gap) */
+  /* Was right: 32px, meant to clear .compactStrip's own padding-right: 24px "peek" gap — but that
+     made the two arrows sit at visibly different insets from their own edge (8px vs 32px), with
+     the right one reading as pushed in over the photo rather than mirroring the left one. Matching
+     8px on both is worth the small, deliberate overlap with that peek gap — the arrow sitting on
+     top of a sliver of the next slide is far less noticeable than the asymmetry was. */
+  right: 8px;
 }
 .compactSlide {
   position: relative;
@@ -192,10 +197,17 @@
   white-space: pre-line;
   text-wrap: pretty;
 }
+/* flex-wrap, not a flex-direction: column/row toggle keyed to a breakpoint — a fixed breakpoint
+   guess ("row at 768px+") can be wrong for a specific tablet's actual reported viewport width, and
+   did report wrong for one: still stacked vertically on a tablet with real room to spare. Each
+   ProjectMeta below sets its own flex-basis (see that file) so this reflows off genuinely
+   available width instead — side by side whenever there's room for both, stacked otherwise,
+   correct for any device without needing to special-case it. */
 .metaRow {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px 16px;
   margin-top: 16px;
 }
 
@@ -214,7 +226,6 @@
   .title { font-size: 30px; line-height: 1.15; }
   .role { font-size: 16px; }
   .body { font-size: 13px; line-height: 1.5; } /* was 14px — matches ProjectMeta's 13px here too */
-  .metaRow { flex-direction: row; gap: 16px; }
   .textCol { max-width: 720px; }
   .compactSlide { height: 260px; }
 }
@@ -257,7 +268,6 @@
     height: 100%;
     overflow-y: auto;
   }
-  .metaRow { flex-direction: row; gap: 16px; }
 }
 
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: landscape) {

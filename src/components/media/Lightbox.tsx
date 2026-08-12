@@ -3,11 +3,14 @@
 import { useCallback, useEffect, useRef, type CSSProperties } from "react";
 import Image from "next/image";
 import { IconButton } from "@/components/core/IconButton";
+import { VideoEmbed } from "@/components/media/VideoEmbed";
 import { getDictionary, type Locale } from "@/lib/i18n";
 import styles from "./Lightbox.module.css";
 
+export type LightboxSlide = { type: "photo"; src: string } | { type: "video"; vimeoUrl: string };
+
 export interface LightboxProps {
-  images: string[];
+  slides: LightboxSlide[];
   alt: string;
   index: number;
   locale: Locale;
@@ -15,16 +18,22 @@ export interface LightboxProps {
   onNavigate: (index: number) => void;
 }
 
-/** Full-screen photo viewer for the detail page: dims everything behind it, shows the photo at
- *  its full size (object-fit: contain, so nothing gets cropped), and steps through the same
- *  photo set (cover + gallery) that MediaGallery's own inline slider uses — the point is
- *  specifically to make photos actually legible on a phone, where the inline slider/cover is
- *  too small to make out detail. Arrow keys, swipe, and on-screen arrows all drive the same
- *  onNavigate callback; the parent (DetailMedia) owns the open/index state so this stays a
- *  plain controlled view. */
-export function Lightbox({ images, alt, index, locale, onClose, onNavigate }: LightboxProps) {
+/** Full-screen viewer for the detail page: dims everything behind it and steps through the same
+ *  combined [cover, video?, ...gallery] set the compact strip and rail both use — a video slide
+ *  isn't a separate modal off to the side, it's a real stop in this same sequence, so someone
+ *  swiping through photos runs into it rather than possibly never noticing it exists. A photo
+ *  slide shows at full size (object-fit: contain, nothing cropped); a video slide plays inline
+ *  here (autoplay — opening a lightbox already *is* the "play it" gesture, same reasoning
+ *  VideoLightbox used before this merged into here). Arrow keys, swipe, and on-screen arrows all
+ *  drive the same onNavigate callback; the parent (DetailMedia) owns the open/index state so this
+ *  stays a plain controlled view. */
+export function Lightbox({ slides, alt, index, locale, onClose, onNavigate }: LightboxProps) {
   const dict = getDictionary(locale);
-  const count = images.length;
+  const count = slides.length;
+  const slide = slides[index];
+  // Numbered among photo slides only, not the raw slide index — a video slide interleaved
+  // between photos shouldn't skip a number or get counted as one.
+  const photoNumber = slides.slice(0, index + 1).filter((s) => s.type === "photo").length;
   const touchStartX = useRef<number | null>(null);
 
   const go = useCallback((delta: number) => onNavigate((index + delta + count) % count), [index, count, onNavigate]);
@@ -74,15 +83,19 @@ export function Lightbox({ images, alt, index, locale, onClose, onNavigate }: Li
       />
 
       <div className={styles.stage} onClick={(e) => e.stopPropagation()} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <Image
-          key={images[index]}
-          src={images[index]}
-          alt={index === 0 ? alt : `${alt} — ${dict.gallery.photoSuffix} ${index + 1}`}
-          fill
-          sizes="100vw"
-          className={styles.image}
-          priority
-        />
+        {slide.type === "video" ? (
+          <VideoEmbed key={slide.vimeoUrl} vimeoUrl={slide.vimeoUrl} title={`${alt} — ${dict.detail.videoTitleSuffix}`} autoplay className={styles.video} />
+        ) : (
+          <Image
+            key={slide.src}
+            src={slide.src}
+            alt={photoNumber === 1 ? alt : `${alt} — ${dict.gallery.photoSuffix} ${photoNumber}`}
+            fill
+            sizes="100vw"
+            className={styles.image}
+            priority
+          />
+        )}
       </div>
 
       {count > 1 ? (
