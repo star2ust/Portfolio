@@ -29,9 +29,15 @@
   gap: 16px;
 }
 
-/* Column by default (cover photo, then the video/gallery rail stacked below it, both full
-   width) — mobile/tablet-portrait's shape. The "media beside text" breakpoint further down
-   switches this back to a row (cover left, rail right). */
+/* .mediaCol holds two alternate media treatments, only one ever visible at a time (toggled by
+   display:none per breakpoint below) — not a reflow of the same DOM, a genuinely different
+   shape: mobile/tablet-portrait wants one flat horizontally-swipeable strip (cover, video, and
+   every gallery photo as equal peer slides — "listat the whole block together" per request), the
+   landscape+ breakpoint further down wants the original cover-left/rail-right split. Rendering
+   both (see DetailMedia.tsx) and hiding one via CSS, rather than a JS viewport check, so the
+   right shape is correct on the very first paint — no post-hydration layout flash. The
+   duplicated cover/gallery images this costs are cheap: only one branch's <Image priority> is
+   ever actually eager-fetched, the other's default lazy loading never fires while display:none. */
 .mediaCol {
   order: 1;
   flex: 0 0 auto;
@@ -39,7 +45,39 @@
   flex-direction: column;
   gap: 8px;
 }
+
+/* ---------- mobile / tablet-portrait: one flat swipeable strip ---------- */
+.compactStrip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  /* a peek of the next slide's edge reads as "more to swipe to" — a strip that exactly fills the
+     viewport per slide can look like the end of the gallery even when it isn't. */
+  padding-right: 24px;
+}
+.compactSlide {
+  position: relative;
+  flex: 0 0 auto;
+  height: 200px;
+  aspect-ratio: 16 / 9;
+  scroll-snap-align: start;
+  overflow: hidden;
+  background: transparent;
+}
+.compactSlideCoverImg {
+  object-fit: cover;
+}
+.compactSlidePhoto {
+  object-fit: contain;
+}
+
+/* ---------- tablet landscape / laptop / desktop: cover left, rail right — hidden everywhere
+   else (see .compactStrip above); values below are unchanged from before this split. ---------- */
 .imageWrap {
+  display: none;
   position: relative;
   flex: 0 0 auto;
   width: 100%;
@@ -56,9 +94,9 @@
    past .stage's fixed one-viewport height — most projects with 2-4 photos won't ever need to
    actually scroll this, it's a backstop for a long one. */
 .mediaRail {
+  display: none;
   flex: 0 0 auto;
   width: 100%;
-  display: flex;
   flex-direction: column;
   gap: 8px;
   max-height: 220px;
@@ -134,8 +172,9 @@
   padding-top: 12px;
 }
 
-/* ---------- tablet portrait: media (cover + rail, both stacked) above a scrollable text
-   column, same shape as mobile ---------- */
+/* ---------- tablet portrait: same flat swipeable strip as mobile (see .compactStrip above),
+   just a little taller — the extra screen width buys real preview size without reintroducing
+   the old "closes the whole screen" problem a 16:9-of-full-width slide had at this width. ------ */
 @media (min-width: 768px) and (max-width: 1113px) and (orientation: portrait) {
   .index { font-size: 13px; }
   .title { font-size: 30px; line-height: 1.15; }
@@ -143,7 +182,7 @@
   .body { font-size: 14px; line-height: 1.5; }
   .metaRow { flex-direction: row; gap: 16px; }
   .textCol { max-width: 720px; }
-  .mediaRail { max-height: 280px; }
+  .compactSlide { height: 260px; }
 }
 
 /* ---------- tablet landscape / laptop / desktop: media beside text — cover left, the video/
@@ -167,12 +206,17 @@
     height: 100%;
     flex-direction: row;
   }
+  .compactStrip {
+    display: none;
+  }
   .imageWrap {
+    display: block;
     flex: 1 1 auto;
     width: auto;
     aspect-ratio: auto;
   }
   .mediaRail {
+    display: flex;
     flex: 0 0 auto;
     width: 220px;
     max-height: none;

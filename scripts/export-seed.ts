@@ -28,6 +28,7 @@ async function main() {
       ...ru,
       titleEn: en.title,
       roleEn: en.role,
+      techEn: en.tech,
       bodyEn: en.body,
       tasksEn: en.tasks,
       resultEn: en.result,
@@ -38,6 +39,8 @@ async function main() {
 
   const site = {
     ...SEED_SITE_SETTINGS_RU,
+    nameEn: SEED_SITE_SETTINGS_EN.name,
+    roleEn: SEED_SITE_SETTINGS_EN.role,
     heroSpecsEn: SEED_SITE_SETTINGS_EN.heroSpecs,
     about: {
       ...SEED_SITE_SETTINGS_RU.about,

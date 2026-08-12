@@ -98,6 +98,13 @@ export const project = defineType({
       group: "english",
     }),
     defineField({
+      name: "techEn",
+      title: "EN — Технологии",
+      type: "string",
+      description: 'Через обратный слэш: "touchdesigner \\\\ unity". Пусто = используется русский текст.',
+      group: "english",
+    }),
+    defineField({
       name: "bodyEn",
       title: "EN — Описание",
       type: "text",

@@ -25,12 +25,23 @@ button{ font:inherit; color:inherit; background:none; border:0; padding:0; curso
 
 /* Focus — not present in the source (readme.md's own states section says so explicitly), so
    this is a deliberate addition: a 1px orange outline offset 2px, keyboard-only via
-   :focus-visible so mouse/touch users don't see a ring on every click. */
-a:focus-visible,
-button:focus-visible,
-[tabindex]:focus-visible{
-  outline: 1px solid var(--accent);
-  outline-offset: 2px;
+   :focus-visible so mouse/touch users don't see a ring on every click.
+   :focus-visible's own "was this focus keyboard-triggered" heuristic is UA-defined, not
+   perfectly consistent across browsers — reported on a Samsung Galaxy Z Fold/Flip (Samsung
+   Internet) showing this exact orange ring on an ordinary tap, which the heuristic is supposed
+   to suppress. (max-)tap-highlight-color is a different property entirely — already separately
+   handled below — so that wasn't it. Rather than chase one browser's specific heuristic bug,
+   the `hover: hover` + `pointer: fine` guard sidesteps it structurally: those two together are
+   true for an actual mouse/trackpad, false for any touchscreen regardless of how that browser's
+   own focus-visible heuristic behaves — so the ring is now scoped to devices where "keyboard
+   focus" is a meaningful, common interaction in the first place. */
+@media (hover: hover) and (pointer: fine) {
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible{
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+  }
 }
 
 /* Respect the user's motion preference across the whole choreographed motion layer. */

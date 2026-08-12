@@ -87,6 +87,14 @@ export const siteSettings = defineType({
       of: [contactRow],
     }),
     defineField({
+      name: "nameEn",
+      title: "EN — Имя",
+      type: "string",
+      description: "Пусто = на англоязычной версии сайта используется русское имя.",
+      group: "english",
+    }),
+    defineField({ name: "roleEn", title: "EN — Роль", type: "string", group: "english" }),
+    defineField({
       name: "heroSpecsEn",
       title: "EN — Главная — строка спецификации",
       type: "array",

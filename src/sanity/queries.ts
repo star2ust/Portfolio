@@ -36,6 +36,7 @@ interface RawProject {
   title: string;
   titleEn?: string;
   tech: string;
+  techEn?: string;
   year: string;
   cover: SanityImage;
   gallery?: SanityImage[];
@@ -55,7 +56,7 @@ function mapProject(raw: RawProject, locale: Locale): Project {
   return {
     slug: raw.slug,
     title: pick(locale, raw.titleEn, raw.title) ?? raw.title,
-    tech: raw.tech,
+    tech: pick(locale, raw.techEn, raw.tech) ?? raw.tech,
     year: raw.year,
     image: imageUrl(raw.cover, 1400) ?? "/images/work/veb-generative.jpg",
     gallery: (raw.gallery ?? []).map((g) => imageUrl(g, 1400)).filter((u): u is string => Boolean(u)),
@@ -69,7 +70,7 @@ function mapProject(raw: RawProject, locale: Locale): Project {
 }
 
 const PROJECTS_QUERY = groq`*[_type == "project"] | order(order asc) {
-  "slug": slug.current, title, titleEn, tech, year, cover, gallery,
+  "slug": slug.current, title, titleEn, tech, techEn, year, cover, gallery,
   role, roleEn, body, bodyEn, tasks, tasksEn, result, resultEn, vimeoUrl, order
 }`;
 
@@ -115,7 +116,9 @@ export async function getSkills(locale: Locale): Promise<Skill[]> {
 
 interface RawSiteSettings {
   name?: string;
+  nameEn?: string;
   role?: string;
+  roleEn?: string;
   heroSpecs?: { label: string; value: string }[];
   heroSpecsEn?: { label: string; value: string }[];
   aboutTitle?: string;
@@ -148,8 +151,8 @@ export async function getSiteSettings(locale: Locale): Promise<SiteSettings> {
   const heroSpecs = locale === "en" && raw.heroSpecsEn?.length ? raw.heroSpecsEn : raw.heroSpecs;
   const aboutMeta = locale === "en" && raw.aboutMetaEn?.length ? raw.aboutMetaEn : raw.aboutMeta;
   return {
-    name: raw.name || seed.name,
-    role: raw.role || seed.role,
+    name: pick(locale, raw.nameEn, raw.name) || seed.name,
+    role: pick(locale, raw.roleEn, raw.role) || seed.role,
     heroSpecs: heroSpecs?.length ? heroSpecs : seed.heroSpecs,
     about: {
       title: pick(locale, raw.aboutTitleEn, raw.aboutTitle) || seed.about.title,
